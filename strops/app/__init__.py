@@ -1,13 +1,13 @@
-"""Prepares the usage of the opdb module
+"""Prepares the usage of the strops module
 """
 import os
 from django import setup as _setup
 
 
 def _init():
-    """Initializes the django environment for opdb
+    """Initializes the django environment for strops
     """
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "opdb.app.config.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "strops.app.config.settings")
     _setup()
 
     if os.environ.get("ESPRESSODB_INIT_CHECKS", "0") == "1":

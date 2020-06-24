@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Setup file for opdb
+"""Setup file for strops
 """
 __author__ = ""
 __version__ = ""
@@ -20,7 +20,7 @@ with open(path.join(CWD, "requirements-dev.txt"), encoding="utf-8") as inp:
     REQUIREMENTS_DEV = [el.strip() for el in inp.read().split(",")]
 
 setup(
-    name="opdb",
+    name="strops",
     version=__version__,
     description=None,
     long_description=LONG_DESCRIPTION,
@@ -30,5 +30,5 @@ setup(
     packages=find_packages(),
     install_requires=REQUIREMENTS,
     extras_require={"dev": REQUIREMENTS_DEV},
-    entry_points={"console_scripts": ["opdb=opdb.manage:main"]},
+    entry_points={"console_scripts": ["strops=strops.manage:main"]},
 )
