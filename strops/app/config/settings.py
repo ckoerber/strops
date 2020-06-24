@@ -19,10 +19,11 @@ from espressodb.management.utilities.files import get_db_config
 from espressodb.management.utilities.files import ESPRESSO_DB_ROOT
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ROOT_DIR = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), "app")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+ROOT_DIR = os.path.dirname(BASE_DIR)
+CONFIG_DIR = os.path.join(ROOT_DIR, "app")
 
-_SETTINGS = get_project_settings(ROOT_DIR)
+_SETTINGS = get_project_settings(CONFIG_DIR)
 SECRET_KEY = _SETTINGS.get("SECRET_KEY")
 PROJECT_APPS = _SETTINGS.get("PROJECT_APPS", [])
 ALLOWED_HOSTS = _SETTINGS.get("ALLOWED_HOSTS", [])
@@ -95,7 +96,7 @@ WSGI_APPLICATION = "strops.app.config.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-DB_CONFIG = get_db_config(ROOT_DIR)
+DB_CONFIG = get_db_config(CONFIG_DIR)
 DATABASES = {"default": DB_CONFIG}
 
 
@@ -137,8 +138,8 @@ for app in PROJECT_APPS[::-1]:
     if os.path.exists(_static_dir):
         STATICFILES_DIRS.insert(0, _static_dir)
 
-STATIC_ROOT = os.path.join(ROOT_DIR, "static")
-MEDIA_ROOT = os.path.join(ROOT_DIR, "media")
+STATIC_ROOT = os.path.join(CONFIG_DIR, "static")
+MEDIA_ROOT = os.path.join(CONFIG_DIR, "media")
 
 LOGIN_REDIRECT_URL = "base:index"
 LOGOUT_REDIRECT_URL = "base:index"

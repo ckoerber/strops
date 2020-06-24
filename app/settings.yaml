@@ -1,4 +1,5 @@
 SECRET_KEY: "0i%2jg3v%^q=&g8pr_kd*so_@gpe@z0f9xxfi&g@d(e9m@@8g^"
-PROJECT_APPS: []
+PROJECT_APPS:
+    - strops.app.operators
 ALLOWED_HOSTS: []
 DEBUG: True
