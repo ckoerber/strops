@@ -1,0 +1,7 @@
+numpy
+scipy
+sympy
+Django
+django-bootstrap4
+django-widget-tweaks
+espressodb
