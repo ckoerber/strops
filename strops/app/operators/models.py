@@ -32,6 +32,9 @@ class Field(Base):
 
         unique_together = ["kind", "label"]
 
+    def __str__(self):
+        return self.name
+
 
 class Operator(Base):
     """Operator evaluated in strong interaction matrix elements.
@@ -112,6 +115,9 @@ class Basis(Base):
 
         unique_together = ["field", "operator", "n_fields"]
 
+    def __str__(self):
+        return f"{self.field} -> {self.operator}"
+
 
 class Publication(Base):
     """Publication as a reference for specifying information about operators."""
@@ -174,5 +180,7 @@ class OperatorRelation(Base):
     tag = models.CharField(
         max_length=256,
         help_text="Key for grouping different schemes to form a complete representation"
-        " (e.g., if an expansion scheme is workout over several publications.)",
+        " (e.g., if an expansion scheme is workout over several publications)."
+        " Relationships with the same tag should share the same 'order' keys"
+        " to allow sorting them by relevance. ",
     )
