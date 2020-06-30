@@ -3,10 +3,14 @@ from django.db import models
 from espressodb.base.models import Base
 
 from sympy import S
-from sympy.physics.quantum import Operator
+from sympy.physics.quantum import Operator as SympyOperator
 
 
-SCALES = [("q", "quark"), ("n", "nucleon"), ("nrn", "Non-relativistic nuclear scale")]
+SCALES = [
+    ("quark", "Quark"),
+    ("nucleon", "nucleon"),
+    ("nucleon-nr", "Non-relativistic nuclear scale"),
+]
 
 
 class Field(Base):
@@ -31,7 +35,7 @@ class Field(Base):
 
     def check_consistency(self):
         """Checking if d.o.f. can be converted to a symbol."""
-        Operator(self.symbol)
+        SympyOperator(self.symbol)
 
     class Meta:
         """Constraints on class."""
@@ -44,7 +48,7 @@ class Field(Base):
     def as_op(self):
         """
         """
-        return Operator(self.symbol)
+        return SympyOperator(self.symbol)
 
 
 class Operator(Base):
@@ -105,12 +109,12 @@ class Operator(Base):
         """
         S(self.expression)
 
-        if self.fields.values("kind").distinct() > 1:
+        if len(self.fields.values("kind").distinct()) > 1:
             raise ValueError
 
     @property
     def scale(self):
-        return self.fields.values("kind").first()
+        return self.fields.first().kind
 
 
 class Basis(Base):
@@ -194,10 +198,18 @@ class Parameter(Base):
         Update docstrings and consistency checks.
     """
 
-    name = models.CharField()
-    symbol = models.CharField()
-    value = models.JSONField()
-    reference = models.JSONField()
+    name = models.CharField(
+        max_length=256, help_text="Descriptive name of the variable"
+    )
+    symbol = models.CharField(
+        max_length=256, help_text="The mathematical symbol (Sympy syntax)"
+    )
+    value = models.JSONField(help_text="Value or descriptive information.")
+    reference = models.ForeignKey(
+        Publication,
+        on_delete=models.CASCADE,
+        help_text="Publication specifying the parameter.",
+    )
 
     class Meta:
         unique_together = ["name", "reference"]
