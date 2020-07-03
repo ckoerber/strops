@@ -14,7 +14,6 @@ class ListViewAdmin(LVA):
         Arguments:
             obj: The model instance to render.
         """
-        print(obj, obj.latex)
         return obj.latex if hasattr(obj, "latex") else str(obj)
 
 
