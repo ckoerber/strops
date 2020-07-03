@@ -2,24 +2,22 @@
 
 On default generates list view admins for all models
 """
-from django.contrib.admin import register, TabularInline
-from espressodb.base.admin import register_admins, ListViewAdmin
 
-from strops.app.operators.models import Basis, Operator
-
-
-class LVA(ListViewAdmin):
-    display_instance_names = False
+from espressodb.base.admin import register_admins
+from espressodb.base.admin import ListViewAdmin as LVA
 
 
-class BasisInline(TabularInline):
-    model = Basis
-    extra = 2
+class ListViewAdmin(LVA):
+    @staticmethod
+    def instance_name(obj) -> str:
+        """Returns the name of the instance
+        Arguments:
+            obj: The model instance to render.
+        """
+        print(obj, obj.latex)
+        return obj.latex if hasattr(obj, "latex") else str(obj)
 
 
-@register(Operator)
-class OperatorAdmin(LVA):
-    inlines = (BasisInline,)
-
-
-register_admins("strops.app.operators", exclude_models=["Operator"], admin_class=LVA)
+register_admins(
+    "strops.app.operators", exclude_models=["Operator"], admin_class=ListViewAdmin
+)

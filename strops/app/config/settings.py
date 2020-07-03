@@ -71,6 +71,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
+            os.path.join(BASE_DIR, "app", "templates"),
             os.path.join(ESPRESSO_DB_ROOT, "espressodb", "base", "templates"),
             os.path.join(ESPRESSO_DB_ROOT, "espressodb", "documentation", "templates"),
         ],

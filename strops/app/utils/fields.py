@@ -7,10 +7,33 @@ from typing import Optional, Union
 
 from django.db.models import TextField
 
-from sympy import sympfiy, Symbol, SympifyError, Expr
+from sympy import sympify, Symbol, SympifyError, Expr
 from sympy.physics.quantum import Operator
+from sympy.parsing.sympy_parser import parse_expr
 
-ENCODERS = {"expression": sympfiy, "symbol": Symbol, "operator": Operator}
+
+def non_commutative_sympify(string: str):
+    """Evaluates sympy string in non-commutative fashion.
+
+    This function was taken from stack overflow answer by @ely
+    https://stackoverflow.com/a/32169940
+    """
+    parsed_expr = parse_expr(string, evaluate=False)
+
+    new_locals = {
+        sym.name: Symbol(sym.name, commutative=False)
+        for sym in parsed_expr.atoms(Symbol)
+    }
+
+    return sympify(string, locals=new_locals)
+
+
+ENCODERS = {
+    "expression": sympify,
+    "symbol": Symbol,
+    "operator": Operator,
+    "non-commutative-expression": non_commutative_sympify,
+}
 
 
 class SympyField(TextField):
