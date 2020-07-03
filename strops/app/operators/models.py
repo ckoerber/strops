@@ -2,8 +2,11 @@
 from django.db import models
 from espressodb.base.models import Base
 
-from sympy import S, Symbol
+from sympy import sympify, Function
 from sympy.physics.quantum import Operator as SympyOperator
+
+
+from strops.app.utils.fields import SympyField
 
 
 SCALES = [
@@ -29,33 +32,41 @@ class Field(Base):
         help_text="Which version of d.o.f., e.g.,"
         " specifying flavor ('up') or strong isospin ('proton').",
     )
-    symbol = models.CharField(
-        max_length=24, help_text="Mathematical symbol representing the d.o.f.",
+    symbol = SympyField(
+        encoder="Operator", help_text="Mathematical symbol representing the d.o.f.",
     )
-
-    def check_consistency(self):
-        """Checking if d.o.f. can be converted to a symbol."""
-        SympyOperator(self.symbol)
+    conjugation_method = models.CharField(
+        null=True,
+        blank=True,
+        default="Dagger",
+        max_length=20,
+        choices=[("Dagger", "Dagger"), ("Bar", "Bar"), (None, "None")],
+        help_text="Number of field occurances.",
+    )
 
     class Meta:
         """Constraints on class."""
 
         unique_together = ["kind", "label"]
 
+    @property
+    def conjugate(self):
+        """Returns conjugated field (e.g., Dagger(psi))."""
+        return (
+            Function(self.conjugation_method)(self.symbol)
+            if self.conjugation_method is not None
+            else self.symbol
+        )
+
     def __str__(self):
         """Returns own name."""
         return self.name
 
-    def as_op(self):
-        """Converts symbol (text) to sympy operator."""
-        return SympyOperator(self.symbol)
 
-    def check_consistency(self):
-        """Checks if field symbol can be converted to sympy expression."""
+class BilinearOperator(Base):
+    r"""Operator evaluated in strong interaction matrix elements.
 
-
-class Operator(Base):
-    """Operator evaluated in strong interaction matrix elements.
+    Implements $\\psi^\\dagger O \\psi$
 
     Includes spin and chirality, does not include factors and isospin/flavor
     """
@@ -63,15 +74,19 @@ class Operator(Base):
     name = models.CharField(
         max_length=256, help_text="Name of the operator which can be used for searches."
     )
-    fields = models.ManyToManyField(
+    field_lhs = models.ForeignKey(
         Field,
-        through="Basis",
-        help_text="Fields present in the operator (e.g., up-quark fields).",
+        help_text="Conjugated field present on the left of the operator expression"
+        " (e.g., Bar(u)).",
     )
-    expression = models.TextField(
+    matrix = SympyField(
+        encoder="operator",
         unique=True,
-        help_text="Fully qualified term discribing operator"
-        " including creation and annihilation operators.",
+        help_text="Term representing the operator. For example $\\gamma_5$",
+    )
+    field_rhs = models.ForeignKey(
+        Field,
+        help_text="Field present on the right of the operator expression (e.g., d).",
     )
     kind = models.CharField(
         choices=[
@@ -100,21 +115,17 @@ class Operator(Base):
         help_text="Further optional information to specify the operator.",
     )
 
+    def expression(self) -> SympyOperator:
+        r"""Returns $\\psi^\\dagger O \\psi$."""
+        return self.field_lhs.conjugate * self.matrix * self.field_rhs
+
     def __str__(self):
         """Returns expression."""
-        return self.expression
+        return f"{self.field_lhs} {self.expression}"
 
     def check_consistency(self):
-        """Checks for operator before saved.
-
-        Checks:
-        * expression can be converted to sympy expression
-        * expression contains expected numbers of d.o.fs
-        """
-        S(self.expression)
-
-        if len(self.fields.values("kind").distinct()) > 1:
-            raise ValueError
+        """Checks that in and out field are at the same scale."""
+        assert self.field_lhs.kind == self.field_rhs.kind
 
     @property
     def scale(self):
@@ -122,32 +133,7 @@ class Operator(Base):
 
         Returns kind of first field (all fields are at the same scale).
         """
-        return self.fields.first().kind
-
-
-class Basis(Base):
-    """Basis table associating field entries with operator entries."""
-
-    field = models.ForeignKey(
-        Field,
-        on_delete=models.CASCADE,
-        help_text="Field present in operator representation.",
-    )
-    operator = models.ForeignKey(
-        Operator, on_delete=models.CASCADE, help_text="The operator to represent."
-    )
-    n_fields = models.PositiveIntegerField(
-        default=2, help_text="Number of field occurances."
-    )
-
-    class Meta:
-        """Constraints on class."""
-
-        unique_together = ["field", "operator", "n_fields"]
-
-    def __str__(self):
-        """Verbose name field -> operator."""
-        return f"{self.field} -> {self.operator}"
+        return self.field_lhs.kind
 
 
 class Publication(Base):
@@ -194,7 +180,7 @@ class ExpansionScheme(Base):
         max_length=256, choices=SCALES, help_text="The target scale of the expansion."
     )
     parameters = models.JSONField(
-        help_text="List of parameters which must be present for"
+        help_text="List of expansion parameters which must be present for"
         " each term (OperatorRelation) in the expansion."
     )
     references = models.ManyToManyField(
@@ -205,7 +191,7 @@ class ExpansionScheme(Base):
         """Checks if parameters key is a list of sympy expressions."""
         assert isinstance(self.parameters, list)
         for par in self.parameters:
-            S(par)
+            sympify(par)
 
 
 class Parameter(Base):
@@ -220,8 +206,8 @@ class Parameter(Base):
     name = models.CharField(
         max_length=256, help_text="Descriptive name of the variable"
     )
-    symbol = models.CharField(
-        max_length=256, help_text="The mathematical symbol (Sympy syntax)"
+    symbol = SympyField(
+        encoder="Symbol", help_text="The mathematical symbol (Sympy syntax)",
     )
     value = models.JSONField(help_text="Value or descriptive information.")
     reference = models.ForeignKey(
@@ -239,32 +225,29 @@ class Parameter(Base):
         """Returns own name and reference string."""
         return f"{self.name} ({self.reference})"
 
-    def check_consistency(self):
-        """Checks if symbol (text) can be converted to sympy symbol."""
-        Symbol(self.symbol)
 
-
-class OperatorRelation(Base):
+class BilinearOperatorRelation(Base):
     """Table storing information between different oprator representation bridging scales.
 
     For example, this quark operator maps to the following nucleon operators.
     """
 
     source = models.ForeignKey(
-        Operator,
+        BilinearOperator,
         on_delete=models.CASCADE,
         related_name="source_for",
         help_text="More fundamental operator as a source for the propagation of scales.",
     )
     target = models.ForeignKey(
-        Operator,
+        BilinearOperator,
         on_delete=models.CASCADE,
         related_name="target_of",
         help_text="Operator as a source for the propagation of scales.",
     )
-    factor = models.TextField(
+    factor = SympyField(
+        encoder="expression",
         help_text="Factor associated with the propagation of scales."
-        " E.g., 'source -> factor * target' at 'order'."
+        " E.g., 'source -> factor * target' at 'order'.",
     )
     order = models.JSONField(
         null=True,
@@ -297,7 +280,7 @@ class OperatorRelation(Base):
             * source scale equals scheme source scale
             * all expansion parameters defined by scheme are present
         """
-        S(self.factor)
+        sympify(self.factor)
 
         if self.target.scale != self.scheme.target_scale:
             raise ValueError
