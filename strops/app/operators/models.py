@@ -2,7 +2,7 @@
 from django.db import models
 from espressodb.base.models import Base
 
-from sympy import S
+from sympy import S, Symbol
 from sympy.physics.quantum import Operator as SympyOperator
 
 
@@ -43,12 +43,15 @@ class Field(Base):
         unique_together = ["kind", "label"]
 
     def __str__(self):
+        """Returns own name."""
         return self.name
 
     def as_op(self):
-        """
-        """
+        """Converts symbol (text) to sympy operator."""
         return SympyOperator(self.symbol)
+
+    def check_consistency(self):
+        """Checks if field symbol can be converted to sympy expression."""
 
 
 class Operator(Base):
@@ -102,8 +105,9 @@ class Operator(Base):
         return self.expression
 
     def check_consistency(self):
-        """Checks for operator before saved:
+        """Checks for operator before saved.
 
+        Checks:
         * expression can be converted to sympy expression
         * expression contains expected numbers of d.o.fs
         """
@@ -114,6 +118,10 @@ class Operator(Base):
 
     @property
     def scale(self):
+        """Returns the scale at which the operator is implemented defined by fields.
+
+        Returns kind of first field (all fields are at the same scale).
+        """
         return self.fields.first().kind
 
 
@@ -129,7 +137,7 @@ class Basis(Base):
         Operator, on_delete=models.CASCADE, help_text="The operator to represent."
     )
     n_fields = models.PositiveIntegerField(
-        default=1, help_text="Number of field occurances."
+        default=2, help_text="Number of field occurances."
     )
 
     class Meta:
@@ -138,6 +146,7 @@ class Basis(Base):
         unique_together = ["field", "operator", "n_fields"]
 
     def __str__(self):
+        """Verbose name field -> operator."""
         return f"{self.field} -> {self.operator}"
 
 
@@ -166,6 +175,10 @@ class Publication(Base):
         null=True, blank=True, help_text="Additional optional information."
     )
 
+    def __str__(self):
+        """Returns arxiv qualifier."""
+        return f"[{self.arxiv_id}]"
+
 
 class ExpansionScheme(Base):
     """An expansion scheme which relates operators at different scales.
@@ -187,6 +200,12 @@ class ExpansionScheme(Base):
     references = models.ManyToManyField(
         Publication, help_text="Publications specifying the operator relationship."
     )
+
+    def check_consistency(self):
+        """Checks if parameters key is a list of sympy expressions."""
+        assert isinstance(self.parameters, list)
+        for par in self.parameters:
+            S(par)
 
 
 class Parameter(Base):
@@ -212,10 +231,17 @@ class Parameter(Base):
     )
 
     class Meta:
+        """Implements unique constraint on name anmd reference."""
+
         unique_together = ["name", "reference"]
 
     def __str__(self):
+        """Returns own name and reference string."""
         return f"{self.name} ({self.reference})"
+
+    def check_consistency(self):
+        """Checks if symbol (text) can be converted to sympy symbol."""
+        Symbol(self.symbol)
 
 
 class OperatorRelation(Base):
@@ -263,8 +289,16 @@ class OperatorRelation(Base):
     )
 
     def check_consistency(self):
+        """Runs consistency checks on operator relation.
+
+        Checks:
+            * factor can be converted to sympy expression
+            * target scale equals scheme target scale
+            * source scale equals scheme source scale
+            * all expansion parameters defined by scheme are present
         """
-        """
+        S(self.factor)
+
         if self.target.scale != self.scheme.target_scale:
             raise ValueError
         if self.source.scale != self.scheme.source_scale:
