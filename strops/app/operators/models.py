@@ -138,11 +138,11 @@ class Operator(Base):
 
     @property
     def expression(self):
-        """Returns own symbol
-        """
+        """Returns own symbol."""
         return None
 
     def __str__(self):
+        """Returns string of expression."""
         return str(self.expression)
 
     @property
@@ -152,7 +152,9 @@ class Operator(Base):
 
 
 class TwoFieldOperator(Operator):
-    """TODO: choices for matrix field?
+    """Bilinear field operator table.
+
+    TODO: choices for matrix field?
     """
 
     field1 = models.ForeignKey(
@@ -174,10 +176,22 @@ class TwoFieldOperator(Operator):
     )
 
     class Meta:
+        """Implments unique constraint."""
+
         unique_together = ["field1", "matrix1", "field2"]
 
+    def check_consistency(self):
+        """Checks operator properties.
+
+        Tests in order:
+        1. Fields are specified at the same scale
+        2. Own scale is equal to field scale
+        """
+        assert self.field1.scale == self.field2.scale == self.scale
+
     @property
-    def expression(self):
+    def expression(self) -> SympyOperator:
+        """Returns bilinear as operator expression."""
         return self.field1.expression * self.matrix1 * self.field2.expression
 
 
