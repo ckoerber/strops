@@ -7,7 +7,10 @@ class Publication(Base):
     """Publication as a reference for specifying information about operators."""
 
     arxiv_id = models.CharField(
-        max_length=20, help_text="Arxiv qualifier like '2000.01234'.", unique=True
+        max_length=20,
+        help_text="Arxiv qualifier like '2000.01234'.",
+        null=True,
+        blank=True,
     )
     inspirehep_id = models.IntegerField(
         help_text="Insprie HEP id (inspirehep.net/literature/{id}).", unique=True,
@@ -22,7 +25,9 @@ class Publication(Base):
         max_length=256,
         help_text="Journal qualifier of the publication.",
     )
-    preprint_date = models.DateField(help_text="Date preprint got uploaded.")
+    preprint_date = models.DateField(
+        help_text="Date preprint got uploaded.", null=True, blank=True
+    )
     misc = models.JSONField(
         null=True, blank=True, help_text="Additional optional information."
     )

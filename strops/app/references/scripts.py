@@ -45,13 +45,16 @@ def parse_inspires_meta(meta: Dict[str, Any]) -> Dict[str, Any]:
         journal = " ".join([el for el in (title, volume, year, page) if el])
     else:
         journal = None
+
+    date = meta.get("preprint_date")
+    date = datetime.strptime(date, "%Y-%m-%d").date() if date else None
     publication_meta = {
-        "arxiv_id": meta["arxiv_eprints"][0]["value"],
+        "arxiv_id": meta.get("arxiv_eprints", [{}])[0].get("value"),
         "inspirehep_id": meta["inspirehep_id"],
         "authors": authors,
         "title": meta["titles"][0]["title"],
         "journal": journal,
-        "preprint_date": datetime.strptime(meta["preprint_date"], "%Y-%m-%d").date(),
+        "preprint_date": date,
     }
     return publication_meta
 
