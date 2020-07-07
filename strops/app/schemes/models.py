@@ -27,6 +27,9 @@ class ExpansionScheme(Base):
         Publication, help_text="Publications specifying the operator relationship."
     )
 
+    def __str__(self):
+        return f"ExpansionScheme({self.name})"
+
 
 class ExpansionParameter(Base):
     """Unitless parameter used for power counting in operator expansion scheme."""
@@ -61,7 +64,7 @@ class ExpansionParameter(Base):
 
     def __str__(self):
         """Verbose name of parameter."""
-        return f"{self.symbol} ({self.scheme})"
+        return f"{self.symbol} ({self.scheme.name})"
 
 
 class OperatorRelation(Base):
