@@ -127,9 +127,9 @@ class OperatorRelation(Base):
         sympify(self.factor)
 
         if self.target.scale != self.scheme.target_scale:
-            raise ValueError
+            raise ValueError("Target operator not at same scale as scheme specifies.")
         if self.source.scale != self.scheme.source_scale:
-            raise ValueError
+            raise ValueError("Source operator not at same scale as scheme specifies.")
 
 
 class ExpansionOrder(Base):
