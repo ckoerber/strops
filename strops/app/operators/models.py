@@ -164,7 +164,6 @@ class TwoFieldOperator(Operator):
     )
     matrix1 = SympyField(
         encoder="non-commutative-expression",
-        unique=True,
         help_text="Term representing the operator. For example $\\gamma_5$",
     )
     field2 = models.ForeignKey(
@@ -173,6 +172,9 @@ class TwoFieldOperator(Operator):
         help_text="Field present on the right of the operator expression (e.g., d).",
         related_name="operators_22",
     )
+
+    class Meta:
+        unique_together = ["field1", "matrix1", "field2"]
 
     @property
     def expression(self):
