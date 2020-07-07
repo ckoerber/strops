@@ -148,6 +148,9 @@ LOGOUT_REDIRECT_URL = "base:index"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "console": {"format": "%(asctime)s %(name)-8s %(levelname)-8s %(message)s"}
+    },
     "handlers": {
         "console": {
             "level": "DEBUG" if DEBUG else "INFO",
@@ -155,7 +158,8 @@ LOGGING = {
         }
     },
     "loggers": {
-        "espressodb": {"handlers": ["console"], "level": "DEBUG", "propagate": True}
+        "espressodb": {"handlers": ["console"], "level": "DEBUG", "propagate": True},
+        "": {"handlers": ["console"], "level": "INFO"},
     },
 }
 
