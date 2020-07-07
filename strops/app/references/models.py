@@ -34,7 +34,11 @@ class Publication(Base):
 
     def __str__(self):
         """Returns arxiv qualifier."""
-        return f"[{self.arxiv_id}]"
+        return (
+            f"[{self.arxiv_id}]"
+            if self.arxiv_id
+            else f"Inspirehep({self.inspirehep_id})"
+        )
 
     @property
     def url(self):
