@@ -1,10 +1,10 @@
 """Command line script to add inspirehep.net entries to db."""
 from django.core.management.base import BaseCommand
 from strops.app.references.scripts import insert_inspirehep_entries
-from logging import getLogger
+from logging import getLogger, DEBUG
 
 
-LOGGER = getLogger("main")
+LOGGER = getLogger("strops")
 
 
 class Command(BaseCommand):
@@ -18,6 +18,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """Runs `insert_inspirehep_entries` on all provided ids."""
+        verbosity = int(options["verbosity"])
+        if verbosity > 1:
+            LOGGER.setLevel(DEBUG)
+
         LOGGER.info("Parsing inspirehep.net ids %s", options["inspires_ids"])
         n_created, errors = insert_inspirehep_entries(options["inspires_ids"])
         for error in errors:

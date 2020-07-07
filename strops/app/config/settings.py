@@ -159,7 +159,7 @@ LOGGING = {
     },
     "loggers": {
         "espressodb": {"handlers": ["console"], "level": "DEBUG", "propagate": True},
-        "": {"handlers": ["console"], "level": "INFO"},
+        "strops": {"handlers": ["console"], "level": "INFO", "propagate": True},
     },
 }
 

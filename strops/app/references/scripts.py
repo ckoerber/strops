@@ -5,13 +5,18 @@ Downloads meta data from inspire records and populates the reference tables.
 from typing import Dict, Any, Tuple, List
 from datetime import datetime
 import requests
+from logging import getLogger
 
 from strops.app.references.models import Publication
+
+
+LOGGER = getLogger("strops")
 
 
 def get_inspires_meta(inspires_id: int) -> Dict[str, Any]:
     """Extracts meta data from https://inspirehep.net/api/literature/{inspires_id}."""
     url = f"https://inspirehep.net/api/literature/{inspires_id}"
+    LOGGER.debug("Accessing %s", url)
     meta = requests.get(url).json().get("metadata")
     meta["inspirehep_id"] = inspires_id
     return meta
@@ -25,6 +30,7 @@ def parse_inspires_meta(meta: Dict[str, Any]) -> Dict[str, Any]:
 
     Returns: Dictionary which can be used to create a publication entry.
     """
+    LOGGER.debug("Parsing meta with keys %s", meta.keys())
     authors = []
     for author in meta["authors"]:
         if "full_name" in author:
@@ -57,6 +63,7 @@ def insert_inspirehep_entry(inspires_id: int) -> Tuple[Publication, bool]:
     """
     meta = get_inspires_meta(inspires_id)
     data = parse_inspires_meta(meta)
+    LOGGER.debug("Inserting %s", data)
     return Publication.objects.get_or_create(**data)
 
 
@@ -69,6 +76,9 @@ def insert_inspirehep_entries(inspires_ids: List[int]) -> int:
             _, created = insert_inspirehep_entry(iid)
             if created:
                 n_created += 1
+                LOGGER.debug("Entry created")
+            else:
+                LOGGER.debug("Entry already present")
         except Exception as error:
             errors.append(error)
     return n_created, errors
