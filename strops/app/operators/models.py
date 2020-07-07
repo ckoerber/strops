@@ -139,6 +139,8 @@ class Operator(Base):
     @property
     def expression(self):
         """Returns own symbol."""
+        if self.specialization != self:
+            return self.specialization.expression
         return None
 
     def __str__(self):
