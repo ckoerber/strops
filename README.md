@@ -7,4 +7,4 @@ strops addspires -i $(cat papers.txt) # init papers
 ```
 
 ## Todo:
-* Update admin for schemes
+* It seems consistency errors rather cause errors than causing form errors. Maybe I somehow have to wrap form consistencies
