@@ -27,12 +27,6 @@ class ExpansionScheme(Base):
         Publication, help_text="Publications specifying the operator relationship."
     )
 
-    def check_consistency(self):
-        """Checks if parameters key is a list of sympy expressions."""
-        assert isinstance(self.parameters, list)
-        for par in self.parameters:
-            sympify(par)
-
 
 class ExpansionParameter(Base):
     """Unitless parameter used for power counting in operator expansion scheme."""
