@@ -2,7 +2,7 @@
 name: Propose Data Update
 about: You believe stored data is missing, inaccurate or not recent.
 title: "[Data Update]"
-labels: ''
+labels: data
 assignees: ''
 
 ---

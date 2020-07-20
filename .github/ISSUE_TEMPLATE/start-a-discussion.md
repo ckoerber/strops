@@ -2,7 +2,7 @@
 name: Start a Discussion
 about: You like to provide feedback but are unsure about details.
 title: "[Discussion]"
-labels: Discussion
+labels: ''
 assignees: ''
 
 ---
