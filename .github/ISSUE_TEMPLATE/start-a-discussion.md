@@ -7,6 +7,6 @@ assignees: ''
 
 ---
 
-### Please provide the following questions
+### Please address the following questions
 * What do you want to address regarding strops?
 * What is problematic or uncertain? Which information should be discussed by the community to formulate concrete next steps?
