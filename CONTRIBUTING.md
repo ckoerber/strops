@@ -10,9 +10,10 @@ It is the goal of strops to unite and simplify the efforts of multiple physics c
 For this reason, we are looking forward to receive any constructive feedback or contributions towards this goal.
 
 Thus, please reach out if you feel...
-...this module may benefit you, but certain features are missing or need to be adjusted to be useful. 
-...utilized data is incomplete or inaccurate, or more entries would improve the usability.
-...you (or know someone who) could help out by actively contributing to the project.
+
+* ...this module may benefit you, but certain features are missing or need to be adjusted to be useful. 
+* ...utilized data is incomplete or inaccurate, or more entries would improve the usability.
+* ...you (or know someone who) could help out by actively contributing to the project.
 
 A good starting point is looking at existing issues, particularly related to discussions and providing your opinion. We also welcome you to file additional feedback [using issue templates](https://github.com/ckoerber/strops/issues/new/choose).
 
