@@ -1,5 +1,5 @@
 ---
-name: Report a bug (Web Interface)
+name: Report a Bug (Web Interface)
 about: You encounted a bug or unexpected behavior when using the web interface.
 title: "[Bug][Web]"
 labels: bug
