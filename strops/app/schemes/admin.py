@@ -36,5 +36,6 @@ class OperatorRelationAdmin(LVA):
 
 
 register_admins(
-    "strops.app.schemes", exclude_models=["ExpansionScheme", "OperatorRelation"]
+    "strops.app.schemes",
+    exclude_models=["ExpansionScheme", "OperatorRelation", "ExpansionOrder"],
 )
