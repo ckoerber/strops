@@ -20,25 +20,25 @@ from strops.app.schemes import views
 app_name = "schemes"
 urlpatterns = [
     path("", views.Index.as_view(), name="Index"),
-    path("operator-mapping/", views.OpMappingIntro.as_view(), name="Operator Mapping"),
+    path("operator-mapping/", views.OpMappingIntro.as_view(), name="operator-mapping"),
     path(
         "operator-mapping/from/",
-        views.PickStartScaleView.as_view(),
+        views.PickSourceScaleView.as_view(),
         name="op-mapping-source-scale",
     ),
     path(
-        "operator-mapping/from/<slug:scale_source>/to/",
+        "operator-mapping/from/<slug:source_scale>/to/",
         views.PickTargetScaleView.as_view(),
         name="op-mapping-target-scale",
     ),
     path(
-        "operator-mapping/from/<slug:scale_source>/to/<slug:scale_target>/",
+        "operator-mapping/from/<slug:source_scale>/to/<slug:target_scale>/",
         views.PickBranchView.as_view(),
-        name="op-mapping-branch",
+        name="op-mapping-branch-select",
     ),
     path(
-        "operator-mapping/present/",
-        views.PresentView.as_view(),
-        name="op-mapping-present",
+        "operator-mapping/details/",
+        views.DetailsView.as_view(),
+        name="op-mapping-details",
     ),
 ]

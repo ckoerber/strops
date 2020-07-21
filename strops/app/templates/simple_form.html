@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block content %}
+{% if title %}
+<div class="jumbotron">
+    <h1>{{title}}</h1>
+    {% if subtitle %}<p>{{subtitle}}</p>{% endif %}
+</div>
+{% endif %}
+<div class="container">
+    <form method="post" class="form">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        {% endbuttons %}
+    </form>
+</div>
+{% endblock %}
