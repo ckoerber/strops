@@ -1,15 +1,16 @@
+{% load schemes_extras %}
+
 <div class="card-text">
   <ul class="list-group">
     {% for scheme in field.field.queryset %}
-    <li class="list-group-item">
-      <div class="row align-items-center">
-        <div class="col-sm-1">
+    <li class="list-group-item py-0 px-0">
+      <div class="row align-items-center w-100 mx-0">
+        <div class="col-sm-1 text-center">
           <input type="radio" name="{{field.html_name}}" value="{{scheme.pk}}" id="{{field.id_for_label}}">
         </div>
-        <div class="col-sm-11">
-          <label class="form-check-label" for="{{field.id_for_label}}">
-            <a href="{{scheme.get_absolute_url}}" target="_blank">{{scheme.name}}</a>
-            <p>Some text...</p>
+        <div class="col-sm-11 px-0">
+          <label class="form-check-label w-100" for="{{field.id_for_label}}">
+            {% summarize_scheme scheme %}
           </label>
         </div>
       </div>

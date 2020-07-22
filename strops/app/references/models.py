@@ -1,4 +1,6 @@
 """Models of references."""
+from typing import Optional
+
 from django.db import models
 from espressodb.base.models import Base
 
@@ -41,6 +43,15 @@ class Publication(Base):
         )
 
     @property
-    def url(self):
+    def inspire_url(self) -> str:
         """Returns link to inspire.net."""
         return f"https://inspirehep.net/api/literature/{self.inspirehep_id}"
+
+    @property
+    def arxiv_url(self) -> Optional[str]:
+        """Returns link to arxiv."""
+        return f"https://arxiv.org/abs/{self.arxiv_id}" if self.arxiv_id else None
+
+    @property
+    def url(self) -> str:
+        return self.arxiv_url or self.inspire_url

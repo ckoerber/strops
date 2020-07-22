@@ -1,0 +1,11 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">{{scheme.name}}</h5>
+    {% if scheme.references %}<p class="card-text"><b>References:</b>
+      {% for reference in scheme.references.all %}
+      <a href="{{reference.url}}" target="_blank">{{reference}}</a>
+      {% endfor %}
+    </p>{%endif%}
+    <a href="{{scheme.get_absolute_url}}" class="card-link" target="_blank">More details</a>
+  </div>
+</div>

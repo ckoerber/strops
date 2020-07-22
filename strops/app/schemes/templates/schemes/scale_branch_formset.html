@@ -1,34 +1,32 @@
 {% load schemes_extras %}
 {% load bootstrap4 %}
+{% load operators_extras %}
 
+{% with branch|join:'_' as branch_name %}
 <div class="card">
-  <div class="card-header bg-light py-0" id="header_{% string_join '_' branch %}" data-toggle="collapse" data-target="#collapse_{% string_join '_' branch %}" aria-expanded="true" aria-controls="collapse_{% string_join '_' branch %}">
-    <ol class="breadcrumb bg-light my-0">
-      {% for scale in branch %}
-      <li class="breadcrumb-item">{{scale|title}}</li>
-      {% endfor %}
-    </ol>
+  <div class="card-header" id="header_{{branch_name}}">
+      <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_{{branch_name}}" aria-expanded="true" aria-controls="collapse_{{branch_name}}">
+        <h4 class="mb-0">{{ branch|map_scale_names|join:" &rarr; " }}</h4>
+      </button>
   </div>
-  <div id="collapse_{% string_join '_' branch %}" class="collapse show" aria-labelledby="header_{% string_join '_' branch %}" data-parent="#branch-select">
+  <div id="collapse_{{branch_name}}" class="collapse show" aria-labelledby="header_{{branch_name}}" data-parent="#branch-select">
     <form method="post" class="form">
       {% csrf_token %}
-      {{ formset.management_form }}
-      {% for form in formset %}
-      <div class="card-body">
-        <label for="{{form.fields.scheme.id_for_label}}">
-          <b>Step {{forloop.counter}}: {{form.source_scale.value | title}} &rarr; {{form.target_scale.value | title}}</b>
-        </label>
-        {% bootstrap_form_errors form %}
-        {{ form.source_scale }}
-        {{ form.target_scale }}
-        {% render_scheme_choice_field form.scheme %}
-      </div>
-      {% endfor %}
-      <div class="card-body">
-        {% buttons %}
-        <button type="submit" class="btn btn-primary" name="branch" value="branch_{% string_join '_' branch %}">Submit</button>
-        {% endbuttons %}
-      </div>
-    </form>
+      {{ formset.management_form }} {% for form in formset %} <div class="card-body">
+    <label for="{{form.fields.scheme.id_for_label}}">
+      <b>Step {{forloop.counter}}: {{form.source_scale.value | title}} &rarr; {{form.target_scale.value | title}}</b>
+    </label>
+    {% bootstrap_form_errors form %}
+    {{ form.source_scale }}
+    {{ form.target_scale }}
+    {% render_scheme_choice_field form.scheme %}
   </div>
+  {% endfor %}
+  <div class="card-body">
+    {% buttons %}
+    <button type="submit" class="btn btn-primary" name="branch" value="branch_{{branch_name}}">Submit</button>
+    {% endbuttons %}
+  </div>
+  </form>
 </div>
+{% endwith %}
