@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap4 %}
 {% load schemes_extras %}
-{% load widget_tweaks %}
 
 {% block content %}
 {% if title %}
@@ -13,56 +11,8 @@
 <div class="container">
   <div id="branch-select">
     {% for branch, formset in formsets.items %}
-    <div class="card">
-      <div class="card-header bg-light py-0" id="header_{% string_join '_' branch %}" data-toggle="collapse" data-target="#collapse_{% string_join '_' branch %}" aria-expanded="true" aria-controls="collapse_{% string_join '_' branch %}">
-        <ol class="breadcrumb bg-light my-0">
-          {% for scale in branch %}
-          <li class="breadcrumb-item">{{scale|title}}</li>
-          {% endfor %}
-        </ol>
-      </div>
-      <div id="collapse_{% string_join '_' branch %}" class="collapse show" aria-labelledby="header_{% string_join '_' branch %}" data-parent="#branch-select">
-        <form method="post" class="form">
-          {% csrf_token %}
-          {{ formset.management_form }}
-          {% for form in formset %}
-          <div class="card-body">
-            <label for="{{form.fields.scheme.id_for_label}}">
-              <b>Step {{forloop.counter}}: {{form.source_scale.value | title}} &rarr; {{form.target_scale.value | title}}</b>
-            </label>
-            {% bootstrap_form_errors form %}
-            {{ form.source_scale }}
-            {{ form.target_scale }}
-            <div class="card-text">
-              <ul class="list-group">
-                {% for scheme in form.fields.scheme.queryset %}
-                <li class="list-group-item">
-                  <div class="row align-items-center">
-                    <div class="col-sm-1">
-                      <input type="radio" name="{{form.scheme.html_name}}" value="{{scheme.pk}}" id="{{form.scheme.id_for_label}}">
-                    </div>
-                    <div class="col-sm-11">
-                      <label class="form-check-label" for="{{form.scheme.id_for_label}}">
-                         <a href="{{scheme.get_absolute_url}}" target="_blank">{{scheme.name}}</a>
-                         <p>Some text...</p>
-                        </ul>
-                      </label>
-                    </div>
-                </li>
-                {% endfor %}
-              </ul>
-            </div>
-          </div>
-          {% endfor %}
-          <div class="card-body">
-            {% buttons %}
-            <button type="submit" class="btn btn-primary" name="branch" value="branch_{% string_join '_' branch %}">Submit</button>
-            {% endbuttons %}
-          </div>
-        </form>
-      </div>
-      {% endfor %}
-    </div>
+    {% render_scale_branch_formset branch formset %}
+    {% endfor %}
   </div>
 </div>
 {% endblock %}

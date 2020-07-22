@@ -1,0 +1,20 @@
+<div class="card-text">
+  <ul class="list-group">
+    {% for scheme in field.field.queryset %}
+    <li class="list-group-item">
+      <div class="row align-items-center">
+        <div class="col-sm-1">
+          <input type="radio" name="{{field.html_name}}" value="{{scheme.pk}}" id="{{field.id_for_label}}">
+        </div>
+        <div class="col-sm-11">
+          <label class="form-check-label" for="{{field.id_for_label}}">
+            <a href="{{scheme.get_absolute_url}}" target="_blank">{{scheme.name}}</a>
+            <p>Some text...</p>
+          </label>
+        </div>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+</li>
