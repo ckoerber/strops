@@ -2,9 +2,17 @@ from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView
+from django.forms import formset_factory
 
-from strops.app.schemes.forms import ScaleForm, BranchFormSet, OperatorFormSet, SCALES
-from strops.app.schemes.utils.graphs import get_connected_scales
+from django.http import Http404, HttpResponseRedirect
+from strops.app.schemes.forms import (
+    ScaleForm,
+    ExpansionSchemeForm,
+    OperatorFormSet,
+    SCALES,
+    SourceTargetScaleForm,
+)
+from strops.app.schemes.utils.graphs import get_connected_scales, get_scale_branches
 
 
 class Index(TemplateView):
@@ -18,15 +26,13 @@ class OpMappingIntro(TemplateView):
 class PickSourceScaleView(FormView):
     template_name = "simple_form.html"
     form_class = ScaleForm
-    scale = None
 
     def form_valid(self, form):
-        self.scale = form.cleaned_data["scale"]
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy(
-            "schemes:op-mapping-target-scale", kwargs={"source_scale": self.scale}
+        return HttpResponseRedirect(
+            reverse_lazy(
+                "schemes:op-mapping-target-scale",
+                kwargs={"source_scale": form.cleaned_data["scale"]},
+            )
         )
 
     def get_context_data(self, **kwargs):
@@ -37,47 +43,75 @@ class PickSourceScaleView(FormView):
 
 class PickTargetScaleView(FormView):
     template_name = "simple_form.html"
-    form_class = ScaleForm
-    success_url = reverse_lazy("op-mapping-branch-select")
-    source_scale = None
-    target_scale = None
-    choices = None
+    form_class = SourceTargetScaleForm
 
-    def get(self, request, *args, **kwargs):
-        self.source_scale = kwargs.get("source_scale")
-        return super().get(request, *args, **kwargs)
+    def get_initial(self):
+        return {"source_scale": self.kwargs["source_scale"]}
+
+    def get_form(self, form_class=None):
+        """Return an instance of the form to be used in this view."""
+        form = super().get_form(form_class=form_class)
+        target_scales = get_connected_scales(self.kwargs["source_scale"])
+        if not target_scales:
+            raise Http404(
+                "Could not locate scales connected to %s scale."
+                % self.kwargs["source_scale"]
+            )
+        form.fields["target_scale"].choices = [
+            (key, verbose) for key, verbose in SCALES if key in target_scales
+        ]
+        return form
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "At which scale do you want to evaluate operators?"
-        context["source_scale"] = self.source_scale
-        context["choices"] = self.choices
         return context
 
     def form_valid(self, form):
-        self.target_scale = form.cleaned_data["scale"]
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy(
-            "schemes:op-mapping-branch-select",
-            kwargs={
-                "source_scale": self.source_scale,
-                "target_scale": self.target_scale,
-            },
+        return HttpResponseRedirect(
+            reverse_lazy(
+                "schemes:op-mapping-branch-select",
+                kwargs={
+                    "source_scale": form.cleaned_data["source_scale"],
+                    "target_scale": form.cleaned_data["target_scale"],
+                },
+            )
         )
 
-    def get_form(self, *args, **kwargs):
-        form = super().get_form(*args, **kwargs)
-        choices = get_connected_scales(self.source_scale)
-        form.fields["scale"].choices = [el for el in SCALES if el[0] in choices]
-        return form
 
+class PickBranchView(TemplateView):
+    template_name = "schemes/branch-select-view.html"
 
-class PickBranchView(FormView):
-    template_name = "schemes/index.html"
-    form_class = BranchFormSet
-    success_url = reverse_lazy("op-mapping-details")
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Which expansion schemes do you want to use?"
+        context["source_scale"] = self.kwargs["source_scale"]
+        context["target_scale"] = self.kwargs["target_scale"]
+
+        if context["source_scale"] and context["target_scale"]:
+            branches = get_scale_branches(
+                context["source_scale"], context["target_scale"], instance_as_key=True
+            )
+        else:
+            branches = dict()
+
+        context["formsets"] = dict()
+        for branch, steps in branches.items():
+            context["formsets"][branch] = formset_factory(ExpansionSchemeForm, extra=0)(
+                initial=[
+                    {"source_scale": source, "target_scale": target, "scheme": schemes}
+                    for source, target, schemes in steps
+                ],
+                prefix="branch_%s" % "_".join(branch),
+            )
+        # breakpoint()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        print(request.GET)
+        print(request.POST)
+        print(args)
+        print(kwargs)
 
 
 class DetailsView(FormView):
