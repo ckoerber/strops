@@ -28,6 +28,9 @@ class ExpansionScheme(Base):
     references = models.ManyToManyField(
         Publication, help_text="Publications specifying the operator relationship."
     )
+    description = models.TextField(
+        help_text="What does this scheme represent?", null=True, blank=False
+    )
 
     def __str__(self):
         return f"ExpansionScheme({self.name})"
