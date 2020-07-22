@@ -11,6 +11,7 @@ from sympy.physics.quantum import Operator as SympyOperator
 from strops.app.utils.fields import SympyField
 from strops.app.utils.tex import latex
 
+# For html redirects, it is assumed that the first el of scales has no underscore!
 SCALES = [
     ("quark", "Quark"),
     ("nucleon", "Nucleon"),
