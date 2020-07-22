@@ -12,7 +12,11 @@ from strops.app.schemes.forms import (
     SCALES,
     SourceTargetScaleForm,
 )
-from strops.app.schemes.utils.graphs import get_connected_scales, get_scale_branches
+from strops.app.schemes.utils.graphs import (
+    get_connected_scales,
+    get_scale_branches,
+    get_scales_with_connections,
+)
 
 
 class Index(TemplateView):
@@ -39,6 +43,15 @@ class PickSourceScaleView(FormView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Where do you want to start?"
         return context
+
+    def get_form(self, form_class=None):
+        """Return an instance of the form to be used in this view."""
+        form = super().get_form(form_class=form_class)
+        scales = get_scales_with_connections()
+        form.fields["scale"].choices = [
+            (key, verbose) for key, verbose in SCALES if key in scales
+        ]
+        return form
 
 
 class PickTargetScaleView(FormView):

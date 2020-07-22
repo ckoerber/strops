@@ -37,6 +37,16 @@ def construct_scale_graph(instance_as_key: bool = False) -> MultiDiGraph:
     return construct_multi_di_graph(edges)
 
 
+def get_scales_with_connections(graph: Optional[MultiDiGraph] = None):
+    """Return list of scales which have at least one connection.
+
+    Arguments:
+        graph: The graph to look up. Defaults to ExpansionScheme graph.
+    """
+    graph = graph or construct_scale_graph()
+    return list(node for node in graph if graph.neighbors(node))
+
+
 def get_connected_scales(scale: str, graph: Optional[MultiDiGraph] = None):
     """Return list of connected scales for given scale.
 
@@ -45,7 +55,11 @@ def get_connected_scales(scale: str, graph: Optional[MultiDiGraph] = None):
         graph: The graph to look up. Defaults to ExpansionScheme graph.
     """
     graph = graph or construct_scale_graph()
-    return list(node for node in bfs_tree(graph, scale).nodes if node != scale)
+    return (
+        list(node for node in bfs_tree(graph, scale).nodes if node != scale)
+        if scale in graph
+        else list()
+    )
 
 
 def get_scale_branches(
