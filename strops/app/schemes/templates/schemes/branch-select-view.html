@@ -28,17 +28,24 @@
           <div class="card-body">
             {{ form.non_field_errors }}
             <label for="{{form.fields.scheme.id_for_label}}">
-                {{form.source_scale.value | title}} &rarr; {{form.target_scale.value | title}}
+              <b>Step {{forloop.counter}}: {{form.source_scale.value | title}} &rarr; {{form.target_scale.value | title}}</b>
             </label>
             <div class="card-text">
               {{ form.scheme.errors }}
               <ul class="list-group">
                 {% for scheme in form.fields.scheme.queryset %}
                 <li class="list-group-item">
-                  <input type="radio" name="{{form.scheme.html_name}}" value="{{scheme.pk}}" id="{{form.scheme.id_for_label}}">
-                  <label class="form-check-label" for="{{form.scheme.id_for_label}}">
-                    <a href="{{scheme.get_absolute_url}}" target="_blank">{{scheme.name}}</a>
-                  </label>
+                  <div class="row align-items-center">
+                    <div class="col-sm-1">
+                      <input type="radio" name="{{form.scheme.html_name}}" value="{{scheme.pk}}" id="{{form.scheme.id_for_label}}">
+                    </div>
+                    <div class="col-sm-11">
+                      <label class="form-check-label" for="{{form.scheme.id_for_label}}">
+                         <a href="{{scheme.get_absolute_url}}" target="_blank">{{scheme.name}}</a>
+                         <p>Some text...</p>
+                        </ul>
+                      </label>
+                    </div>
                 </li>
                 {% endfor %}
               </ul>
