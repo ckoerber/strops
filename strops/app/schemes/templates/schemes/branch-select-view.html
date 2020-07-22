@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
 {% load schemes_extras %}
+{% load static %}
+
+{% block head-extra %}
+<link rel="stylesheet" href="{% static 'strops.css' %}">
+
+{% endblock head-extra %}
+
 
 {% block content %}
 {% if title %}

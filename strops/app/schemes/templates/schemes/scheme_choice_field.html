@@ -3,7 +3,7 @@
 <div class="card-text">
   <ul class="list-group">
     {% for scheme in field.field.queryset %}
-    <li class="list-group-item py-0 px-0">
+    <li class="list-group-item py-0 px-0 hover-shadow">
       <div class="row align-items-center w-100 mx-0">
         <div class="col-sm-1 text-center">
           <input type="radio" name="{{field.html_name}}" value="{{scheme.pk}}" id="{{field.id_for_label}}">
