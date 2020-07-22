@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import FormView
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 from django.forms import formset_factory
 
 from django.http import Http404, HttpResponseRedirect
+from strops.app.schemes.models import ExpansionScheme
 from strops.app.schemes.forms import (
     ScaleForm,
     ExpansionSchemeForm,
@@ -21,6 +22,12 @@ from strops.app.schemes.utils.graphs import (
 
 class Index(TemplateView):
     template_name = "schemes/index.html"
+
+
+class ExpansionSchemeDetailsView(DetailView):
+    template_name = "schemes/expansion_scheme_details.html"
+    model = ExpansionScheme
+    context_object_name = "scheme"
 
 
 class OpMappingIntro(TemplateView):

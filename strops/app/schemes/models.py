@@ -1,5 +1,7 @@
 """Models of schemes."""
 from django.db import models
+from django.urls import reverse
+
 from espressodb.base.models import Base
 
 from sympy import sympify
@@ -29,6 +31,9 @@ class ExpansionScheme(Base):
 
     def __str__(self):
         return f"ExpansionScheme({self.name})"
+
+    def get_absolute_url(self):
+        return reverse("schemes:expansion_scheme_detail", args=[str(self.id)])
 
 
 class ExpansionParameter(Base):

@@ -20,6 +20,11 @@ from strops.app.schemes import views
 app_name = "schemes"
 urlpatterns = [
     path("", views.Index.as_view(), name="Index"),
+    path(
+        "details/<int:pk>",
+        views.ExpansionSchemeDetailsView.as_view(),
+        name="expansion_scheme_detail",
+    ),
     path("operator-mapping/", views.OpMappingIntro.as_view(), name="operator-mapping"),
     path(
         "operator-mapping/from/",

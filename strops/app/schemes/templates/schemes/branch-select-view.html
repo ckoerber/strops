@@ -6,51 +6,54 @@
 {% block content %}
 {% if title %}
 <div class="jumbotron">
-    <h1>{{title}}</h1>
-    {% if subtitle %}<p>{{subtitle}}</p>{% endif %}
+  <h1>{{title}}</h1>
+  {% if subtitle %}<p>{{subtitle}}</p>{% endif %}
 </div>
 {% endif %}
 <div class="container">
-    <div id="branch-select">
-        {% for branch, formset in formsets.items %}
-        <div class="card">
-            <div class="card-header bg-light py-0" id="header_{% string_join '_' branch %}" data-toggle="collapse" data-target="#collapse_{% string_join '_' branch %}" aria-expanded="true" aria-controls="collapse_{% string_join '_' branch %}">
-                <ol class="breadcrumb bg-light my-0">
-                    {% for scale in branch %}
-                    <li class="breadcrumb-item">{{scale|title}}</li>
-                    {% endfor %}
-                </ol>
+  <div id="branch-select">
+    {% for branch, formset in formsets.items %}
+    <div class="card">
+      <div class="card-header bg-light py-0" id="header_{% string_join '_' branch %}" data-toggle="collapse" data-target="#collapse_{% string_join '_' branch %}" aria-expanded="true" aria-controls="collapse_{% string_join '_' branch %}">
+        <ol class="breadcrumb bg-light my-0">
+          {% for scale in branch %}
+          <li class="breadcrumb-item">{{scale|title}}</li>
+          {% endfor %}
+        </ol>
+      </div>
+      <div id="collapse_{% string_join '_' branch %}" class="collapse show" aria-labelledby="header_{% string_join '_' branch %}" data-parent="#branch-select">
+        <form method="post" class="form">
+          {% csrf_token %}
+          {% for form in formset %}
+          <div class="card-body">
+            {{ form.non_field_errors }}
+            <label for="{{form.fields.scheme.id_for_label}}">
+                {{form.source_scale.value | title}} &rarr; {{form.target_scale.value | title}}
+            </label>
+            <div class="card-text">
+              {{ form.scheme.errors }}
+              <ul class="list-group">
+                {% for scheme in form.fields.scheme.queryset %}
+                <li class="list-group-item">
+                  <input type="radio" name="{{form.scheme.html_name}}" value="{{scheme.pk}}" id="{{form.scheme.id_for_label}}">
+                  <label class="form-check-label" for="{{form.scheme.id_for_label}}">
+                    <a href="{{scheme.get_absolute_url}}" target="_blank">{{scheme.name}}</a>
+                  </label>
+                </li>
+                {% endfor %}
+              </ul>
             </div>
-            <div id="collapse_{% string_join '_' branch %}" class="collapse show" aria-labelledby="header_{% string_join '_' branch %}" data-parent="#branch-select">
-                <form method="post" class="form">
-                    {% csrf_token %}
-                    {% for form in formset %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{form.source_scale.value | title}} &rarr; {{form.target_scale.value | title}} </h5>
-                        <div class="card-text">
-                            {{form}}
-                        </div>
-                    </div>
-                    {% endfor %}
-                    <div class="card-body">
-                        {% buttons %}
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                        {% endbuttons %}
-                    </div>
-                </form>
-            </div>
-            {% endfor %}
-        </div>
+          </div>
+          {% endfor %}
+          <div class="card-body">
+            {% buttons %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+            {% endbuttons %}
+          </div>
+        </form>
+      </div>
+      {% endfor %}
     </div>
+  </div>
 </div>
 {% endblock %}
-
-{% comment %}
-<div class="card-text">
-    {% for choice, scheme in form.scheme|zip:form.fields.scheme.queryset %}
-    <div class="custom-control custom-radio">
-        <input type="checkbox" class="custom-control-input" id="{{choice.id_for_label}}">
-        <label class="custom-control-label" for="{{choice.id_for_label}}">{{ scheme.name }}</label>
-    </div>
-</div>
-{% endcomment %}
