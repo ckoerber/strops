@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView, DetailView
@@ -144,9 +144,12 @@ class PickBranchView(TemplateView):
 
     def form_valid(self, formset):
         """If the form is valid, redirect to the supplied URL."""
-        return self.render_to_response(self.get_context_data())
+        scheme_ids = [str(el["scheme"].id) for el in formset.cleaned_data]
+        return redirect(
+            reverse("schemes:op-mapping-details") + "?schemes=" + ",".join(scheme_ids)
+        )
 
 
-class DetailsView(FormView):
+class DetailsView(TemplateView):
     template_name = "schemes/index.html"
     success_url = reverse_lazy("op-mapping-details")
