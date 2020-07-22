@@ -31,11 +31,3 @@ class ExpansionSchemeForm(forms.Form):
     )
     source_scale = forms.CharField(widget=forms.HiddenInput(), required=False)
     target_scale = forms.CharField(widget=forms.HiddenInput(), required=False)
-
-
-class BranchFormSet:
-    pass
-
-
-class OperatorFormSet:
-    pass

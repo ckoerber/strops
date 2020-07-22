@@ -24,14 +24,16 @@
       <div id="collapse_{% string_join '_' branch %}" class="collapse show" aria-labelledby="header_{% string_join '_' branch %}" data-parent="#branch-select">
         <form method="post" class="form">
           {% csrf_token %}
+          {{ formset.management_form }}
           {% for form in formset %}
           <div class="card-body">
-            {{ form.non_field_errors }}
             <label for="{{form.fields.scheme.id_for_label}}">
               <b>Step {{forloop.counter}}: {{form.source_scale.value | title}} &rarr; {{form.target_scale.value | title}}</b>
             </label>
+            {% bootstrap_form_errors form %}
+            {{ form.source_scale }}
+            {{ form.target_scale }}
             <div class="card-text">
-              {{ form.scheme.errors }}
               <ul class="list-group">
                 {% for scheme in form.fields.scheme.queryset %}
                 <li class="list-group-item">
@@ -54,7 +56,7 @@
           {% endfor %}
           <div class="card-body">
             {% buttons %}
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" name="branch" value="branch_{% string_join '_' branch %}">Submit</button>
             {% endbuttons %}
           </div>
         </form>
