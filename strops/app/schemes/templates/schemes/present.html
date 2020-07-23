@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load operators_extras %}
+
+{% block content %}
+<div class="jumbotron">
+  <h1>{{title}}</h1>
+  <h4 class="mb-0">{{ branch|map_scale_names|join:" &rarr; " }}</h4>
+</div>
+<div class="container">
+  <ul>
+    {% for scheme in schemes %}
+    <li>
+      {{scheme}}
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}
