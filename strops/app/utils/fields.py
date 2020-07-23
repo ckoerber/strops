@@ -4,12 +4,28 @@ Provides:
     * Sympy field
 """
 from typing import Optional, Union
+from re import MULTILINE
 
 from django.db.models import TextField
+from django.core.validators import RegexValidator
 
 from sympy import sympify, Symbol, SympifyError, Expr
 from sympy.physics.quantum import Operator
 from sympy.parsing.sympy_parser import parse_expr
+
+FACTOR_VALIDATORS = [
+    RegexValidator(
+        r"^[a-zA-Z0-9\*\/_\s]+$",
+        message="Please use allowed characters only (chars, numbers, * and /)",
+        flags=MULTILINE,
+    ),
+    RegexValidator(
+        r"\*\s*\*",
+        message="Power is not allowed, please use multiple * or /.",
+        inverse_match=True,
+        flags=MULTILINE,
+    ),
+]
 
 
 def non_commutative_sympify(string: str):

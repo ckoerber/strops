@@ -5,7 +5,6 @@ from django.urls import reverse
 from django.views.generic import TemplateView
 from django.forms import formset_factory
 
-
 from strops.app.schemes.forms import SCALES, ExpansionSchemeForm
 from strops.app.schemes.utils.graphs import get_scale_branches
 
