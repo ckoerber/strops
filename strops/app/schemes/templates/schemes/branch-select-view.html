@@ -4,7 +4,6 @@
 
 {% block head-extra %}
 <link rel="stylesheet" href="{% static 'strops.css' %}">
-
 {% endblock head-extra %}
 
 
@@ -22,4 +21,18 @@
     {% endfor %}
   </div>
 </div>
+<script>
+  $(document).ready(function() {
+    renderMathInElement(
+      document.body, {
+        delimiters: [{
+            left: "$",
+            right: "$",
+            display: false
+          },
+        ]
+      }
+    );
+  });
+</script>
 {% endblock %}

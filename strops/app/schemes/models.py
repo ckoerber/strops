@@ -38,6 +38,17 @@ class ExpansionScheme(Base):
     def get_absolute_url(self):
         return reverse("schemes:expansion_scheme_detail", args=[str(self.id)])
 
+    def related_source_operators(self):
+        ids = self.relations.values_list("source__id", flat=True)
+        return Operator.objects.filter(id__in=ids)
+
+    def related_target_operators(self):
+        ids = self.relations.values_list("target__id", flat=True)
+        return Operator.objects.filter(id__in=ids)
+
+    def orders(self):
+        return self.relations.values_list("expansionorder__power", flat=True)
+
 
 class ExpansionParameter(Base):
     """Unitless parameter used for power counting in operator expansion scheme."""
@@ -46,7 +57,9 @@ class ExpansionParameter(Base):
     symbol = SympyField(
         encoder="symbol", help_text="Symbol representing this parameter."
     )
-    scheme = models.ForeignKey(ExpansionScheme, on_delete=models.CASCADE)
+    scheme = models.ForeignKey(
+        ExpansionScheme, on_delete=models.CASCADE, related_name="expansion_parameters"
+    )
     description = models.TextField(
         help_text="What does this parameter describe, which assumptions are made?"
     )
@@ -104,6 +117,7 @@ class OperatorRelation(Base):
     scheme = models.ForeignKey(
         ExpansionScheme,
         on_delete=models.CASCADE,
+        related_name="relations",
         help_text="Key for grouping different schemes to form a complete representation"
         " (e.g., if an expansion scheme is workout over several publications)."
         " Relationships with the same tag should share the same 'order' keys"
