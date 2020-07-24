@@ -32,7 +32,8 @@ def get_op_connections_data_plotly(
 
     paths = set()
     for source, target in product(sources, targets):
-        paths |= set(map(tuple, all_simple_paths(graph, source, target)))
+        if source in graph.nodes and target in graph.nodes:
+            paths |= set(map(tuple, all_simple_paths(graph, source, target)))
 
     data = []
     for n_scale, scale in enumerate(scales):
