@@ -131,7 +131,9 @@ class OperatorRelation(Base):
         " E.g., chiral power counting scheme.",
     )
     parameters = models.ManyToManyField(
-        Parameter, help_text="Non-expansion paramters present in the factor."
+        Parameter,
+        help_text="Non-expansion paramters present in the factor.",
+        blank=True,
     )
     references = models.ManyToManyField(
         Publication, help_text="Publications specifying the operator relationship."
