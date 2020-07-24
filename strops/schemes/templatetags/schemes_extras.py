@@ -1,6 +1,6 @@
 """Utility template tags for schemes."""
 from django import template
-from sympy import latex
+from strops.utils.tex import latex
 
 
 register = template.Library()

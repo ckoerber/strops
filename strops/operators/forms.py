@@ -30,7 +30,7 @@ class OperatorFactorForm(forms.Form):
         data = self.cleaned_data["factor"]
 
         try:
-            sympify(data)
+            data = sympify(data)
         except Exception as e:
             raise forms.ValidationError(
                 "Failed to sympify %s with error %s" % (data, e)

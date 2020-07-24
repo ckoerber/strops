@@ -75,7 +75,24 @@ class PresentView(TemplateView):
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
         )
-        context["formset"] = kwargs.get("formset") or self.get_formset(
+        context["formset"] = kwargs.pop("formset", None) or self.get_formset(
             context["schemes"]
         )
+        context.update(kwargs)
         return context
+
+    def post(self, request, *args, **kwargs):
+        formset = formset_factory(OperatorFactorForm)(request.POST)
+        if formset.is_valid():
+            return self.form_valid(formset)
+        else:
+            return self.render_to_response(self.get_context_data(formset=formset))
+
+    def form_valid(self, formset):
+        """If the form is valid, redirect to the supplied URL."""
+        lagrangian = 0
+        for data in formset.cleaned_data:
+            lagrangian += data["factor"] * data["operator"].expression
+        return self.render_to_response(
+            self.get_context_data(formset=formset, lagrangian=lagrangian)
+        )

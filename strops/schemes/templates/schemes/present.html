@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 {% load operators_extras %}
+{% load schemes_extras %}
+
+{% load bootstrap4 %}
+
 {% block head-extra %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/1.33.1/plotly.min.js" integrity="sha512-V0j9LhrK9IMNdFYZqh+IqU4cjo7wdxyHNyH+L0td4HryBuZ7Oq6QxP2/CWr6TituX31+gv5PnolvERuTbz8UNA==" crossorigin="anonymous"></script>
 {% endblock head-extra %}
@@ -10,6 +14,18 @@
   {{connection_graph|safe}}
 </div>
 <div class="container">
-    {{formset}}
+  <form method="post" class="form">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <ul>
+      {% for form in formset %}
+      <li>{% render_opertor_factor_form form %}</li>
+      {% endfor %}
+    </ul>
+      {% buttons %}
+      <button type="submit" class="btn btn-primary" name="branch" value="branch_{{branch_name}}">Submit</button>
+      {% endbuttons %}
+  </form>
+  {% if lagrangian %}<h2>Lagrangian</h2>{{lagrangian|tex}}{% endif %}
 </div>
 {% endblock %}

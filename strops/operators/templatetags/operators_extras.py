@@ -17,3 +17,8 @@ def scale_name(scale: str) -> str:
 @register.filter
 def map_scale_names(scales: List[str]) -> List[str]:
     return [SCALES.get(scale) for scale in scales]
+
+
+@register.inclusion_tag("operators/opertor_factor_form.html")
+def render_opertor_factor_form(form):
+    return {"form": form}
