@@ -3,6 +3,7 @@ from django.http import Http404
 from django.views.generic import TemplateView
 
 from strops.app.schemes.models import ExpansionScheme
+from strops.app.schemes.utils.graphs import get_connected_operators
 
 
 class PresentView(TemplateView):
@@ -36,6 +37,18 @@ class PresentView(TemplateView):
 
         return schemes
 
+    def get_formsets(self):
+        formsets = {}
+        for branch, steps in self.get_branches().items():
+            formsets[branch] = formset_factory(ExpansionSchemeForm, extra=0)(
+                initial=[
+                    {"source_scale": source, "target_scale": target, "scheme": schemes}
+                    for source, target, schemes in steps
+                ],
+                prefix="branch_%s" % "_".join(branch),
+            )
+        return formsets
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -46,5 +59,6 @@ class PresentView(TemplateView):
             branch.append(scheme.source_scale)
         branch.append(scheme.target_scale)
         context["branch"] = branch
+        connected_operators = get_connected_operators(context["schemes"])
         # context["formsets"] = kwargs.get("formsets") or self.get_formsets()
         return context

@@ -1,6 +1,7 @@
 """Tools related to identifying connections between different scales."""
 from typing import List, Tuple, Any, Optional, Dict, Union
 
+from strops.app.operators.models import Operator
 from strops.app.schemes.models import ExpansionScheme
 from networkx import MultiDiGraph, all_simple_paths, bfs_tree
 
@@ -98,3 +99,37 @@ def get_scale_branches(
         multi_paths[path] = steps
 
     return multi_paths
+
+
+def get_connected_operators(
+    schemes: List[ExpansionScheme], prune: bool = True
+) -> MultiDiGraph:
+    """
+    """
+    graph = MultiDiGraph()
+    for scheme in schemes:
+        for relation in scheme.relations.all():
+            graph.add_edge(relation.source, relation.target, key=relation)
+
+    if prune:
+        source_ops = Operator.objects.filter(
+            id__in=schemes[0].relations.values_list("source__id", flat=True)
+        )
+        target_ops = Operator.objects.filter(
+            id__in=schemes[-1].relations.values_list("target__id", flat=True)
+        )
+
+        connected_to_source = set()
+        for node in source_ops:
+            # This includes source ops (start nodes)
+            connected_to_source |= set(bfs_tree(graph, node).nodes)
+
+        connected_to_target = set()
+        for node in target_ops:
+            # This includes target ops (start nodes)
+            connected_to_target |= set(bfs_tree(graph, node, reverse=True).nodes)
+
+        unconnected = set(graph.nodes) - (connected_to_source & connected_to_target)
+        graph.remove_nodes_from(unconnected)
+
+    return graph
