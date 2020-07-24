@@ -2,7 +2,7 @@
 from typing import List, Dict, Any
 from itertools import product
 
-from networkx import all_simple_paths
+from networkx import all_simple_paths, MultiDiGraph
 
 from plotly.graph_objects import Figure, Parcoords
 from plotly.offline import plot
@@ -14,7 +14,7 @@ from strops.operators.templatetags.operators_extras import scale_name
 
 
 def get_op_connections_data_plotly(
-    schemes: List[ExpansionScheme],
+    schemes: List[ExpansionScheme], graph: MultiDiGraph
 ) -> List[Dict[str, Any]]:
     """Prepares plotly parcoords data from schemes.
 
@@ -52,10 +52,12 @@ def get_op_connections_data_plotly(
     return data
 
 
-def get_op_connections_graph_plotly(schemes: List[ExpansionScheme], **layout) -> str:
+def get_op_connections_graph_plotly(
+    schemes: List[ExpansionScheme], graph: MultiDiGraph, **layout
+) -> str:
     """Creates plotly Parcoords grah (div without js) for schemes."""
     fig = Figure(
-        data=Parcoords(dimensions=get_op_connections_data_plotly(schemes)),
+        data=Parcoords(dimensions=get_op_connections_data_plotly(schemes, graph)),
         layout=layout,
     )
     return plot(fig, auto_open=False, output_type="div", include_plotlyjs=False)

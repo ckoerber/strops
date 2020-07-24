@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from django.forms import formset_factory
 
 from strops.schemes.models import SCALES, ExpansionScheme
-from strops.schemes.forms import SCALES, ExpansionSchemeForm
+from strops.schemes.forms import ExpansionSchemeForm
 from strops.schemes.utils.graphs import get_scale_branches
 
 
