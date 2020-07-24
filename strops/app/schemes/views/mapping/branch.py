@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.views.generic import TemplateView
 from django.forms import formset_factory
 
+from strops.app.schemes.models import SCALES, ExpansionScheme
 from strops.app.schemes.forms import SCALES, ExpansionSchemeForm
 from strops.app.schemes.utils.graphs import get_scale_branches
 
@@ -25,13 +26,21 @@ class PickBranchView(TemplateView):
     def get_formsets(self):
         formsets = {}
         for branch, steps in self.get_branches().items():
-            formsets[branch] = formset_factory(ExpansionSchemeForm, extra=0)(
+            formsets[branch] = formset_factory(
+                ExpansionSchemeForm, extra=0, max_num=len(steps), min_num=len(steps)
+            )(
                 initial=[
-                    {"source_scale": source, "target_scale": target, "scheme": schemes}
-                    for source, target, schemes in steps
+                    {"source_scale": source, "target_scale": target}
+                    for source, target, _ in steps
                 ],
                 prefix="branch_%s" % "_".join(branch),
             )
+            for n_step, (_, _, schemes) in enumerate(steps):
+                formsets[branch][n_step].fields[
+                    "scheme"
+                ].queryset = ExpansionScheme.objects.filter(
+                    id__in=[el.id for el in schemes]
+                )
         return formsets
 
     def get_context_data(self, **kwargs):
