@@ -62,7 +62,12 @@ class PresentView(TemplateView):
         context["branch"] = branch
         connected_operators = get_connected_operators(context["schemes"])
         context["connection_graph"] = get_op_connections_graph_plotly(
-            context["schemes"], font_size=20
+            context["schemes"],
+            font_size=20,
+            font_family=None,
+            margin=dict(l=150, r=150, t=100, b=100),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
         )
         # context["formsets"] = kwargs.get("formsets") or self.get_formsets()
         return context
