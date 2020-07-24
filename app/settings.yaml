@@ -1,9 +1,9 @@
 SECRET_KEY: "0i%2jg3v%^q=&g8pr_kd*so_@gpe@z0f9xxfi&g@d(e9m@@8g^"
 PROJECT_APPS:
-    - strops.app.references
-    - strops.app.parameters
-    - strops.app.operators
-    - strops.app.schemes
+    - strops.references
+    - strops.parameters
+    - strops.operators
+    - strops.schemes
 
 ALLOWED_HOSTS: []
 DEBUG: True

@@ -5,7 +5,7 @@ import sys
 
 
 def main():
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "strops.app.config.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "strops.config.settings")
     os.environ["ESPRESSODB_INIT_CHECKS"] = "0"  # Do not run checks for manage.py
 
     try:
