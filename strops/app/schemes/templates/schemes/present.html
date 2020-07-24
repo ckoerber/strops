@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 {% load operators_extras %}
-
+{% block head-extra %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/1.33.1/plotly.min.js" integrity="sha512-V0j9LhrK9IMNdFYZqh+IqU4cjo7wdxyHNyH+L0td4HryBuZ7Oq6QxP2/CWr6TituX31+gv5PnolvERuTbz8UNA==" crossorigin="anonymous"></script>
+{% endblock head-extra %}
 {% block content %}
 <div class="jumbotron">
   <h1>{{title}}</h1>
   <h4 class="mb-0">{{ branch|map_scale_names|join:" &rarr; " }}</h4>
 </div>
 <div class="container">
+    {{connection_graph|safe}}
+
   <ul>
     {% for scheme in schemes %}
     <li>

@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 
 from strops.app.schemes.models import ExpansionScheme
 from strops.app.schemes.utils.graphs import get_connected_operators
+from strops.app.schemes.plotting.connections import get_op_connections_graph_plotly
 
 
 class PresentView(TemplateView):
@@ -60,5 +61,8 @@ class PresentView(TemplateView):
         branch.append(scheme.target_scale)
         context["branch"] = branch
         connected_operators = get_connected_operators(context["schemes"])
+        context["connection_graph"] = get_op_connections_graph_plotly(
+            context["schemes"], font_size=20
+        )
         # context["formsets"] = kwargs.get("formsets") or self.get_formsets()
         return context
