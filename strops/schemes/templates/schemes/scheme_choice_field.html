@@ -6,10 +6,10 @@
     <li class="list-group-item py-0 px-0 hover-shadow">
       <div class="row align-items-center w-100 mx-0">
         <div class="col-sm-1 text-center">
-          <input type="radio" name="{{field.html_name}}" value="{{scheme.pk}}" id="{{field.id_for_label}}" {% if forloop.first %}checked{% endif %}>
+          <input type="radio" name="{{field.html_name}}" value="{{scheme.pk}}" id="{{field.id_for_label}}_{{scheme.pk}}" {% if forloop.first %}checked{% endif %}>
         </div>
         <div class="col-sm-11 px-0">
-          <label class="form-check-label w-100" for="{{field.id_for_label}}">
+          <label class="form-check-label w-100" for="{{field.id_for_label}}_{{scheme.pk}}">
             {% summarize_scheme scheme %}
           </label>
         </div>
