@@ -7,3 +7,4 @@ django-widget-tweaks
 espressodb
 networkx
 requests
+plotly
