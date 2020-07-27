@@ -16,16 +16,22 @@
 </div>
 <div class="container">
   <section>
+    <h3>Operator Contributions</h3>
+    <p class="my-2 text-muted">You can select specific entries to highlight their contributions.</hp>
+
+    {{connection_graph|safe}}
+  </section>
+  <section>
     <div class="card mb-4">
       <div class="card-body">
-        <h4 class="card-title">Selct operators at source</h2>
-          <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+        <h4 class="card-title">Specify the Lagrangian at the {{branch|map_scale_names|first}} scale</h2>
+          <p class="my-2 text-muted">{{formset.0.factor.help_text}}</hp>
           <form method="post" class="form">
             {% csrf_token %}
             {{ formset.management_form }}
             <div class="row justify-content-md-center">
               {% for form in formset %}
-              <div class="col-12 col-md-4 col-lg-3">
+              <div class="col-12 col-md-6">
                 <div class="form-group">
                   {% bootstrap_form form exclude="factor" %}
                   {% bootstrap_field form.factor addon_before=form.factor.label show_help=False show_label=False %}
@@ -43,8 +49,6 @@
     </div>
   </section>
   <section>
-    <h3>Operator Contributions</h3>
-    {{connection_graph|safe}}
     {% if lagrangian %}
     <h3>Lagrangians</h3>
     <h4>Source lagrangian</h4>
