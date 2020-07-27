@@ -30,10 +30,3 @@ def render_scheme_choice_field(field):
 @register.inclusion_tag("schemes/scheme_summary.html")
 def summarize_scheme(scheme):
     return {"scheme": scheme}
-
-
-@register.filter
-def tex(expr, left=None, right=None):
-    left = left or ""
-    right = right or ""
-    return left + latex(expr) + right
