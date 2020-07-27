@@ -1,10 +1,10 @@
 numpy
 scipy
 sympy
-Django
+Django==3.1rc1
 django-bootstrap4
 django-widget-tweaks
-espressodb
+espressodb==1.2.1
 networkx
 requests
 plotly
