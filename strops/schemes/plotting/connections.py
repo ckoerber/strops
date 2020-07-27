@@ -22,7 +22,6 @@ def get_op_connections_data_plotly(
     operators.
     """
     scales = [scheme.source_scale for scheme in schemes] + [schemes[-1].target_scale]
-    graph = get_connected_operators(schemes, prune=True)
     sources = Operator.objects.filter(
         id__in=schemes[0].relations.values_list("source__id", flat=True)
     )
