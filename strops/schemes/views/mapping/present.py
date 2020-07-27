@@ -1,8 +1,9 @@
 """Views associated wit presenting operator mappings."""
+from typing import Dict, Any, Optional
 from django.http import Http404
 from django.views.generic import TemplateView
 
-from strops.operators.forms import OperatorFactorForm
+from strops.operators.forms import NotRequiredOperatorFactorForm
 from strops.operators.models import Operator
 from strops.schemes.models import ExpansionScheme
 from strops.schemes.utils.graphs import get_connected_operators
@@ -48,16 +49,16 @@ class PresentView(TemplateView):
         branch.append(scheme.target_scale)
         return branch
 
-    def get_formset(self, schemes):
+    def get_formset(self, schemes, data: Optional[Dict[str, Any]] = None):
         source_ops = Operator.objects.filter(
             id__in=schemes[0].relations.values_list("source__id", flat=True)
         )
         formset = formset_factory(
-            OperatorFactorForm,
+            NotRequiredOperatorFactorForm,
             extra=0,
             min_num=len(source_ops),
             max_num=len(source_ops),
-        )(initial=[{"operator": operator} for operator in source_ops])
+        )(data=data, initial=[{"operator": operator} for operator in source_ops])
         return formset
 
     def get_context_data(self, **kwargs):
@@ -82,7 +83,7 @@ class PresentView(TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        formset = formset_factory(OperatorFactorForm)(request.POST)
+        formset = self.get_formset(self.get_schemes(), request.POST)
         if formset.is_valid():
             return self.form_valid(formset)
         else:
@@ -92,6 +93,8 @@ class PresentView(TemplateView):
         """If the form is valid, redirect to the supplied URL."""
         lagrangian = 0
         for data in formset.cleaned_data:
+            if not data["factor"]:
+                continue
             lagrangian += data["factor"] * data["operator"].expression
         return self.render_to_response(
             self.get_context_data(formset=formset, lagrangian=lagrangian)

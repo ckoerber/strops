@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load operators_extras %}
 {% load schemes_extras %}
+{% load strops_extras %}
+
 
 {% load bootstrap4 %}
 
@@ -9,23 +11,47 @@
 {% endblock head-extra %}
 {% block content %}
 <div class="jumbotron">
-  <h1>{{title}}</h1>
-  <h4 class="mb-0">{{ branch|map_scale_names|join:" &rarr; " }}</h4>
-  {{connection_graph|safe}}
+  <h1>{{ branch|map_scale_names|join:" &rarr; " }}</h1>
+  <h3 class="mb-0">Schemes: {{ schemes|map_title|join:" &rarr; " }}</h3>
 </div>
 <div class="container">
-  <form method="post" class="form">
-    {% csrf_token %}
-    {{ formset.management_form }}
-    <ul>
-      {% for form in formset %}
-      <li>{% render_opertor_factor_form form %}</li>
-      {% endfor %}
-    </ul>
-      {% buttons %}
-      <button type="submit" class="btn btn-primary" name="branch" value="branch_{{branch_name}}">Submit</button>
-      {% endbuttons %}
-  </form>
-  {% if lagrangian %}<h2>Lagrangian</h2>{{lagrangian|tex}}{% endif %}
+  <section>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h4 class="card-title">Selct operators at source</h2>
+          <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+          <form method="post" class="form">
+            {% csrf_token %}
+            {{ formset.management_form }}
+            <div class="row justify-content-md-center">
+              {% for form in formset %}
+              <div class="col-12 col-md-4 col-lg-3">
+                <div class="form-group">
+                  {% bootstrap_form form exclude="factor" %}
+                  {% bootstrap_field form.factor addon_before=form.factor.label show_help=False show_label=False %}
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            {% buttons %}
+            <div class="text-right">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            {% endbuttons %}
+          </form>
+      </div>
+    </div>
+  </section>
+  <section>
+    <h3>Operator Contributions</h3>
+    {{connection_graph|safe}}
+    {% if lagrangian %}
+    <h3>Lagrangians</h3>
+    <h4>Source lagrangian</h4>
+    $$\mathscr{L} = {{lagrangian|tex}}$$
+    <h4>Target lagrangian</h4>
+    $$\mathscr{L} = {{lagrangian|tex}}$$
+    {% endif %}
+  </section>
 </div>
 {% endblock %}
