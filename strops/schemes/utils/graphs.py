@@ -1,8 +1,10 @@
 """Tools related to identifying connections between different scales."""
-from typing import List, Tuple, Any, Optional, Dict, Union
+from typing import List, Tuple, Any, Optional, Dict, Union, Set
+
+from itertools import product
 
 from strops.operators.models import Operator
-from strops.schemes.models import ExpansionScheme
+from strops.schemes.models import ExpansionScheme, OperatorRelation
 from networkx import MultiDiGraph, all_simple_paths, bfs_tree
 
 
@@ -104,7 +106,15 @@ def get_scale_branches(
 def get_connected_operators(
     schemes: List[ExpansionScheme], prune: bool = True
 ) -> MultiDiGraph:
-    """
+    """Constructs graph of all connected operators for given schemes.
+
+    Arguments:
+        schemes: List of schemes bridging scales.
+        prune: Remove unconnected nodes. This includes source nodes not connected to
+            target nodes and vice versa.
+
+    Returns:
+        Multi di graph with operators as nodes and operator relations as edges (keys).
     """
     graph = MultiDiGraph()
     for scheme in schemes:
@@ -133,3 +143,57 @@ def get_connected_operators(
         graph.remove_nodes_from(unconnected)
 
     return graph
+
+
+def get_all_paths(
+    schemes: List[ExpansionScheme], connected_operators: MultiDiGraph
+) -> Dict[List[Operator], List[Tuple[Operator, Operator, Set[OperatorRelation]]]]:
+    """Returns operator relations for given connection graph.
+
+    Expects output similar to get_connected_operators.
+
+    Arguments:
+        schemes: List of schemes bridging scales.
+        connected_operators: Multi di-graph of connected operators where keys are
+            opeartor relations.
+
+    Returns:
+        Keys correspond to different operator branches, values are individual steps.
+        Each step corresponds to starting operator, next operator in branch and a set
+        of relations between them (e.g., different orders).
+
+    Example:
+        op1 -> rel11 -> op2
+        op2 -> rel21 -> op3
+        op2 -> rel22 -> op3
+
+        would result in
+
+        {(op1, op2, op3): [(op1, op2, {rel11}), (op2, op3, {rel21, rel22})]}
+    """
+    sources = Operator.objects.filter(
+        id__in=schemes[0].relations.values_list("source__id", flat=True)
+    )
+    targets = Operator.objects.filter(
+        id__in=schemes[-1].relations.values_list("target__id", flat=True)
+    )
+
+    paths = set()
+    for source, target in product(sources, targets):
+        if source in connected_operators.nodes and target in connected_operators.nodes:
+            paths |= set(
+                map(tuple, all_simple_paths(connected_operators, source, target))
+            )
+
+    multi_paths = dict()
+    for path in paths:
+        ppath = [(path[i], path[i + 1]) for i in range(len(path) - 1)]
+
+        steps = []
+        for op_start, op_end in ppath:
+            relation = set(connected_operators[op_start][op_end].keys())
+            steps.append((op_start, op_end, relation))
+
+        multi_paths[path] = steps
+
+    return multi_paths

@@ -1,12 +1,14 @@
 """Views associated wit presenting operator mappings."""
 from typing import Dict, Any, Optional
+from collections import defaultdict
+
 from django.http import Http404
 from django.views.generic import TemplateView
 
 from strops.operators.forms import NotRequiredOperatorFactorForm
 from strops.operators.models import Operator
 from strops.schemes.models import ExpansionScheme
-from strops.schemes.utils.graphs import get_connected_operators
+from strops.schemes.utils.graphs import get_connected_operators, get_all_paths
 from strops.schemes.plotting.connections import get_op_connections_graph_plotly
 from django.forms import formset_factory
 
@@ -64,9 +66,11 @@ class PresentView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Specify the source Lagrangian"
-        context["schemes"] = self.get_schemes()
+        context["schemes"] = kwargs.get("schemes") or self.get_schemes()
         context["branch"] = self.get_branch(context["schemes"])
-        context["connected_operators"] = get_connected_operators(context["schemes"])
+        context["connected_operators"] = kwargs.get(
+            "connected_operators"
+        ) or get_connected_operators(context["schemes"])
         context["connection_graph"] = get_op_connections_graph_plotly(
             context["schemes"],
             context["connected_operators"],
@@ -91,11 +95,41 @@ class PresentView(TemplateView):
 
     def form_valid(self, formset):
         """If the form is valid, redirect to the supplied URL."""
-        lagrangian = 0
-        for data in formset.cleaned_data:
-            if not data["factor"]:
-                continue
-            lagrangian += data["factor"] * data["operator"].expression
+        source_lagrangian = {
+            el["operator"]: el["factor"] for el in formset.cleaned_data if el["factor"]
+        }
+
+        schemes = self.get_schemes()
+        connected_operators = get_connected_operators(schemes)
+        operator_connections = get_all_paths(schemes, connected_operators)
+
+        target_lagrangian = defaultdict(int)
+        for path, steps in operator_connections.items():
+            factor = source_lagrangian[path[0]]
+            for start, end, relations in steps:
+                tmp = 0
+                for relation in relations:
+                    tmp += relation.factor
+                factor *= tmp
+
+            target_lagrangian[end] += factor
+
+        source_lagrangian = sum(
+            factor * operator.expression
+            for operator, factor in source_lagrangian.items()
+        )
+        target_lagrangian = sum(
+            factor * operator.expression
+            for operator, factor in target_lagrangian.items()
+        )
+
         return self.render_to_response(
-            self.get_context_data(formset=formset, lagrangian=lagrangian)
+            self.get_context_data(
+                formset=formset,
+                source_lagrangian=source_lagrangian,
+                target_lagrangian=target_lagrangian,
+                connected_operators=connected_operators,
+                schemes=schemes,
+                operator_connections=operator_connections,
+            )
         )
