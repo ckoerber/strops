@@ -19,7 +19,7 @@
     <h3>Operator Contributions</h3>
     <p class="my-2 text-muted">You can select specific entries to highlight their contributions.</hp>
 
-    {{connection_graph|safe}}
+      {{connection_graph|safe}}
   </section>
   <section>
     <div class="card mb-4">
@@ -53,9 +53,37 @@
     <h3>Lagrangians</h3>
     <h4>Source lagrangian</h4>
     $$\mathscr{L} = {{source_lagrangian|tex}}$$
+    {% endif %}
+    {% if target_lagrangian %}
     <h4>Target lagrangian</h4>
     $$\mathscr{L} = {{target_lagrangian|tex}}$$
     {% endif %}
+    {% if parameters %}
+    <h4>Parameters</h4>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Symbol</td>
+          <th scope="col">Name</td>
+          <th scope="col">Value</td>
+          <th scope="col">Unit</td>
+          <th scope="col">Reference</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for par in parameters %}
+        <tr>
+          <td>${{par.symbol|tex}}$</td>
+          <td>{{par.name|title}}</td>
+          <td>{{par.get_value}}</td>
+          <td>{{par.get_unit}}</td>
+          <td><a href="{{par.reference.url}}" target="_blank">{{par.reference}}</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+    {{missing_symbols}}
   </section>
 </div>
 {% endblock %}

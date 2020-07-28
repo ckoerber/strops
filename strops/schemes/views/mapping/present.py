@@ -103,16 +103,18 @@ class PresentView(TemplateView):
         connected_operators = get_connected_operators(schemes)
         operator_connections = get_all_paths(schemes, connected_operators)
 
-        target_lagrangian = defaultdict(int)
+        target_contributions = defaultdict(int)
+        parameters = set()
         for path, steps in operator_connections.items():
             factor = source_lagrangian[path[0]]
             for start, end, relations in steps:
                 tmp = 0
                 for relation in relations:
+                    parameters |= set(relation.parameters.all())
                     tmp += relation.factor
                 factor *= tmp
 
-            target_lagrangian[end] += factor
+            target_contributions[end] += factor
 
         source_lagrangian = sum(
             factor * operator.expression
@@ -120,8 +122,16 @@ class PresentView(TemplateView):
         )
         target_lagrangian = sum(
             factor * operator.expression
-            for operator, factor in target_lagrangian.items()
+            for operator, factor in target_contributions.items()
         )
+
+        par_symbols = set(par.symbol for par in parameters)
+        parameters = set(
+            par for par in parameters if par.symbol in target_lagrangian.free_symbols
+        )
+        missing_symbols = set()
+        for operator, factor in target_contributions.items():
+            missing_symbols |= factor.free_symbols - par_symbols
 
         return self.render_to_response(
             self.get_context_data(
@@ -131,5 +141,7 @@ class PresentView(TemplateView):
                 connected_operators=connected_operators,
                 schemes=schemes,
                 operator_connections=operator_connections,
+                parameters=parameters,
+                missing_symbols=missing_symbols,
             )
         )
