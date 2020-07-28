@@ -19,15 +19,30 @@ SCALES = [
     ("nucleon-nr", "Non-relativistic nuclear scale"),
 ]
 KINDS = {
-    "quark": [("up", "up"), ("down", "down"), ("strange", "strange")],
-    "nucleon": [("proton", "proton"), ("neutron", "neutron"), ("pion", "pion")],
-    "nucleon-nr": [("proton", "proton"), ("neutron", "neutron"), ("pion", "pion")],
+    "quark": [
+        ("up", "up"),
+        ("down", "down"),
+        ("strange", "strange"),
+        ("dm", "Dark Matter"),
+    ],
+    "nucleon": [
+        ("proton", "proton"),
+        ("neutron", "neutron"),
+        ("pion", "pion"),
+        ("dm", "Dark Matter"),
+    ],
+    "nucleon-nr": [
+        ("proton", "proton"),
+        ("neutron", "neutron"),
+        ("pion", "pion"),
+        ("dm", "Dark Matter"),
+    ],
 }
 Bar = Function("Bar")
 CONJUGATIONS = {
-    "quark": {"up": Bar, "down": Bar, "strange": Bar},
-    "nucleon": {"proton": Bar, "neutron": Bar, "pion": None},
-    "nucleon-nr": {"proton": Dagger, "neutron": Dagger, "pion": None},
+    "quark": {"up": Bar, "down": Bar, "strange": Bar, "dm": Bar},
+    "nucleon": {"proton": Bar, "neutron": Bar, "pion": None, "dm": Bar},
+    "nucleon-nr": {"proton": Dagger, "neutron": Dagger, "pion": None, "dm": Dagger},
 }
 SYMBOLS = {
     "up": "u",
@@ -36,6 +51,7 @@ SYMBOLS = {
     "proton": "p",
     "neutron": "n",
     "pion": "pi",
+    "dm": "chi",
 }
 
 
@@ -81,7 +97,7 @@ class Field(Base):
 
     def __str__(self):
         """Returns own name."""
-        return str(self.expression)
+        return f"{self.expression} @ {self.scale}"
 
     @property
     def latex(self):
@@ -114,23 +130,6 @@ class Operator(Base):
         max_length=256,
         choices=SCALES,
         help_text="Scale at which this degree of freedom interacts.",
-    )
-    charge = models.IntegerField(
-        choices=[(1, "+"), (-1, "-")],
-        help_text="Charge transformation behavior of operator.",
-    )
-    parity = models.IntegerField(
-        choices=[(1, "+"), (-1, "-")],
-        help_text="Parity transformation behavior of operator.",
-    )
-    time = models.IntegerField(
-        choices=[(1, "+"), (-1, "-")],
-        help_text="Time transformation behavior of operator.",
-    )
-    lorentz = models.CharField(
-        choices=LORENTZ_TRAFOS,
-        max_length=2,
-        help_text="How does this operator behave under Lorentz transformations?",
     )
     details = models.JSONField(
         null=True,
@@ -210,9 +209,88 @@ class TwoFieldOperator(Operator):
 #     field3
 #
 #
-# class FourFieldOperator(Operator):
-#     field1
-#     matrix1
-#     field2
-#     matrix2
-#     field3
+class FourFieldOperator(Operator):
+    """Bilinear field operator table.
+
+    TODO: choices for matrix field?
+    """
+
+    field1 = models.ForeignKey(
+        Field,
+        on_delete=models.CASCADE,
+        help_text="Conjugated field present on the left of the operator expression"
+        " (e.g., Bar(u)).",
+        related_name="operators_41",
+    )
+    matrix1 = SympyField(
+        encoder="non-commutative-expression",
+        help_text="Term representing the spin operator between field one and two."
+        " For example $\\gamma_5$",
+    )
+    field2 = models.ForeignKey(
+        Field,
+        on_delete=models.CASCADE,
+        help_text="Second field (from left) of the operator expression (e.g., d).",
+        related_name="operators_42",
+    )
+    matrix2 = SympyField(
+        encoder="non-commutative-expression",
+        help_text="Term representing the spin operator between field two and three",
+    )
+    field3 = models.ForeignKey(
+        Field,
+        on_delete=models.CASCADE,
+        help_text="Third field (from left) of the operator expression (e.g., d)..",
+        related_name="operators_43",
+    )
+    matrix3 = SympyField(
+        encoder="non-commutative-expression",
+        help_text="Term representing the spin operator between field three and four",
+    )
+    field4 = models.ForeignKey(
+        Field,
+        on_delete=models.CASCADE,
+        help_text="Last field (e.g., on the right side) of the operator expression.",
+        related_name="operators_44",
+    )
+
+    class Meta:
+        """Implments unique constraint."""
+
+        unique_together = [
+            "field1",
+            "matrix1",
+            "field2",
+            "matrix2",
+            "field3",
+            "matrix3",
+            "field4",
+        ]
+
+    def check_consistency(self):
+        """Checks operator properties.
+
+        Tests in order:
+        1. Fields are specified at the same scale
+        2. Own scale is equal to field scale
+        """
+        assert (
+            self.field1.scale
+            == self.field2.scale
+            == self.field3.scale
+            == self.field4.scale
+            == self.scale
+        )
+
+    @property
+    def expression(self) -> SympyOperator:
+        """Returns bilinear as operator expression."""
+        return (
+            self.field1.expression
+            * self.matrix1
+            * self.field2.expression
+            * self.matrix2
+            * self.field3.expression
+            * self.matrix3
+            * self.field4.expression
+        )
