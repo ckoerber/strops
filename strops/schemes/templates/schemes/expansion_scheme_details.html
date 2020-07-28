@@ -9,13 +9,45 @@
 {% block content %}
 <div class="jumbotron">
   <h1>{{scheme.name}}</h1>
-  <h5>Source scale: {{scheme.source_scale|scale_name}}</h5>
-  <h5>Target scale: {{scheme.target_scale|scale_name}}</h5>
-  <p>{{scheme.description}}</p>
 </div>
 <div class="container">
   <section>
     <h3>Expansion details</h3>
+    <table class="table table-hover">
+      <tbody>
+        <tr>
+          <td>Source scale</td>
+          <td>{{scheme.source_scale|scale_name}}</td>
+        </tr>
+        <tr>
+          <td>Target scale</td>
+          <td>{{scheme.target_scale|scale_name}}</td>
+        </tr>
+        <tr>
+          <td>Description</td>
+          <td>{{scheme.description}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>Expansion Parameters</h4>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Symbol</td>
+          <th scope="col">Approx size</td>
+          <th scope="col">Description</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for par in scheme.expansion_parameters.all %}
+        <tr>
+          <td>${{par.symbol|tex}}$</td>
+          <td>{{par.natural_size|tex}}</td>
+          <td>{{par.description|tex}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </section>
   <hr class="my-5" />
   <section>
@@ -25,52 +57,52 @@
         <h4>{{scheme.source_scale|scale_name}} scale</h4>
         <div class="list-group">
           {% for operator in source_operators %}
-          <a href="{{ operator.get_absolute_url }}" class="list-group-item list-group-item-action flex-column align-items-start">
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">${{operator.expression|tex}}$</h5>
-              <p>{{operator.name|title}}</p>
-            </div>
-            {% if operator.details %}<p class="mb-1">{{operator.details}}</p>{% endif %}
-          </a>
-          {% endfor %}
-        </div>
+        <a href="{{ operator.get_absolute_url }}" class="list-group-item list-group-item-action flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">${{operator.expression|tex}}$</h5>
+            <p>{{operator.name|title}}</p>
+          </div>
+          {% if operator.details %}<p class="mb-1">{{operator.details}}</p>{% endif %}
+        </a>
+        {% endfor %}
+</div>
+</div>
+<div class="col-md-6">
+  <h4>{{scheme.target_scale|scale_name}} scale</h4>
+  <div class="list-group">
+    {% for operator in target_operators %}
+    <a href="{{ operator.get_absolute_url }}" class="list-group-item list-group-item-action flex-column align-items-start">
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">${{operator.expression|tex}}$</h5>
+        <p>{{operator.name|title}}</p>
       </div>
-      <div class="col-md-6">
-        <h4>{{scheme.target_scale|scale_name}} scale</h4>
-        <div class="list-group">
-          {% for operator in target_operators %}
-          <a href="{{ operator.get_absolute_url }}" class="list-group-item list-group-item-action flex-column align-items-start">
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">${{operator.expression|tex}}$</h5>
-              <p>{{operator.name|title}}</p>
-            </div>
-            {% if operator.details %}<p class="mb-1">{{operator.details}}</p>{% endif %}
-          </a>
-          {% endfor %}
-        </div>
+      {% if operator.details %}<p class="mb-1">{{operator.details}}</p>{% endif %}
+    </a>
+    {% endfor %}
+  </div>
+</div>
+</div>
+<h4>Connections</h4>
+{{connection_graph|safe}}
+</section>
+{% if scheme.references %}
+<hr class="my-5" />
+<section>
+  <h3>References</h3>
+  <div class="list-group">
+    {% for reference in scheme.references.all %}
+    <a href="{{reference.url}}" target="_blank" class="list-group-item list-group-item-action flex-column align-items-start">
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">{{reference.title}}</h5>
+        {% if reference.preprint_date %}<p><small class="text-muted">{{reference.preprint_date}}</small></p>{% endif %}
       </div>
-    </div>
-    <h4>Connections</h4>
-    {{connection_graph|safe}}
-  </section>
-  {% if scheme.references %}
-  <hr class="my-5" />
-  <section>
-    <h3>References</h3>
-    <div class="list-group">
-      {% for reference in scheme.references.all %}
-      <a href="{{reference.url}}" target="_blank" class="list-group-item list-group-item-action flex-column align-items-start">
-        <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1">{{reference.title}}</h5>
-          {% if reference.preprint_date %}<p><small class="text-muted">{{reference.preprint_date}}</small></p>{% endif %}
-        </div>
-        <p>{% if reference.journal %}{{reference.journal}} |{% endif %} {{reference}}</p>
-        <p>{{reference.authors}}</p>
-        {% if reference.misc %}<p>{{reference.misc}}</small></p>{% endif %}
-      </a>
-      {% endfor %}
-    </div>
-  </section>
-  {% endif %}
+      <p>{% if reference.journal %}{{reference.journal}} |{% endif %} {{reference}}</p>
+      <p>{{reference.authors}}</p>
+      {% if reference.misc %}<p>{{reference.misc}}</small></p>{% endif %}
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
 </div>
 {% endblock %}
