@@ -43,9 +43,14 @@ class Publication(Base):
         )
 
     @property
-    def inspire_url(self) -> str:
+    def inspire_api_url(self) -> str:
         """Returns link to inspire.net."""
         return f"https://inspirehep.net/api/literature/{self.inspirehep_id}"
+
+    @property
+    def inspire_url(self) -> str:
+        """Returns link to inspire.net."""
+        return f"https://inspirehep.net/literature/{self.inspirehep_id}"
 
     @property
     def arxiv_url(self) -> Optional[str]:
