@@ -12,6 +12,7 @@ li.hover-shadow:hover {
 
 body {
     color: var(--rich-black-fogra-29)!;
+    padding-top: 50px;
 }
 
 .jumbotron, .navbar {
