@@ -1,7 +1,19 @@
 {% extends 'base.html' %}
+{% load schemes_extras %}
+
 
 {% block content %}
 <div class="jumbotron">
-    <h1>{{scheme.name}}</h1>
+    <h1>List of all expansion schemes</h1>
+    <p>{{model}}</p>
 </div>
+
+<div class="container">
+    {% for scheme in object_list %}
+    <div class="my-1">{% summarize_scheme scheme new_tab_link=False display_scales=True %}</div>
+    {% endfor %}
+</div>
+
+
+
 {% endblock %}

@@ -28,5 +28,9 @@ def render_scheme_choice_field(field):
 
 
 @register.inclusion_tag("schemes/scheme_summary.html")
-def summarize_scheme(scheme):
-    return {"scheme": scheme}
+def summarize_scheme(scheme, new_tab_link: bool = True, display_scales: bool = False):
+    return {
+        "scheme": scheme,
+        "new_tab_link": new_tab_link,
+        "display_scales": display_scales,
+    }

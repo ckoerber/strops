@@ -15,7 +15,8 @@ from strops.parameters.models import Parameter
 class ExpansionScheme(Base):
     """An expansion scheme which relates operators at different scales.
 
-    It must provides keys which allow ordering different opator relations.
+    It collects relations between different scales which can be organized according to
+    order parameters.
     """
 
     name = models.CharField(max_length=256, help_text="Name of the expansion scheme.")

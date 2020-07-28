@@ -10,6 +10,12 @@ class ExpansionSchemeListView(ListView):
     model = ExpansionScheme
     template_name = "schemes/expansion_scheme_list.html"
 
+    def get_context_data(self):
+        context = super().get_context_data()
+        context["model"] = self.model.__doc__
+        print(context)
+        return context
+
 
 class ExpansionSchemeDetailsView(DetailView):
     """Detail view of expansion scheme."""
