@@ -1,0 +1,112 @@
+{% load static %}
+{% load bootstrap4 %}
+{% load base_extras %}
+
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>strops</title>
+  <link rel="icon" sizes="32x32" type="image/vnd.microsoft.icon" href="{% static 'icons/favicon.ico' %}" />
+  <link rel="icon" sizes="128x128" type="image/icns" href="{% static 'icons/favicon.icns' %}" />
+  <link rel="icon" sizes="144x144" type="image/x-icon" href="{% static 'icons/favicon.png' %}" />
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{% static 'icons/favicon.png' %}">
+  {% bootstrap_css %}
+  {% bootstrap_javascript jquery='full' %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link href="{% static 'css/base.css' %}" rel="stylesheet">
+  <link href="{% static 'css/katex.min.css' %}" rel="stylesheet">
+  <script defer src="{% static 'js/katex.min.js' %}"></script>
+  <script defer src="{% static 'js/katex-auto-render.min.js' %}" onload="renderMathInElement(document.body);"></script>
+  {% block head-extra %}
+  {% endblock%}
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+      {% block nav %}
+      <!-- Brand -->
+      <a class="navbar-brand" href="{% url 'base:index' %}">
+        <span>strops</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- Links -->
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav">
+          {% block nav-app-links %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin:index' %}">
+              <i class="fa fa-info mx-1" aria-hidden="true"></i>Details
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin:index' %}">
+              <i class="fa fa-connectdevelop mx-1" aria-hidden="true"></i>Mappings
+            </a>
+          </li>
+          {% endblock nav-app-links %}
+          {% block nav-default-links %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+              <i class="fa fa-book mx-1"></i>Documentation
+            </a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/documentation/references/">References</a>
+              <a class="dropdown-item" href="/documentation/parameters/">Parameters</a>
+              <a class="dropdown-item" href="/documentation/operators/">Operators</a>
+              <a class="dropdown-item" href="/documentation/schemes/">Schemes</a>
+            </div>
+          </li>
+          {% endblock nav-default-links %}
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          {% if user.is_staff %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin:index' %}">
+              <i class="fa fa-cog mx-1"></i>Admin
+            </a>
+          </li>
+          {% endif %}
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <span class="navbar-text"><i class="fa fa-user mx-1"></i><b>{{user}}</b></span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout'%}"><i class="fas fa-sign-out-alt mx-1"></i>Logout</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login'%}"><i class="fas fa-sign-in-alt mx-1"></i>Login</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+      {% endblock nav %}
+    </nav>
+  </header>
+  <main role="main">
+
+    {% block content %}
+    {% endblock %}
+
+  </main>
+</body>
+<footer>
+  {% block footer %}
+  <div class="container-fluid">
+    <ol class="breadcrumb bg-light my-1 py-0 text-muted">
+      <li class="breadcrumb-item">EspressoDB version: {% render_version %}</li>
+      {% if user.is_authenticated %}
+      <li class="breadcrumb-item">Database: {% render_db_info %}</li>
+      {% endif %}
+    </ol>
+  </div>
+  {% endblock %}
+</footer>
+
+</html>
