@@ -1,3 +1,24 @@
+:root {
+    --celeste: #adf5ffff;
+    --cerulean-crayola: #3ca6cdff;
+    --rich-black-fogra-29: #151f28ff;
+    --honeydew: #CAE3D2;
+    --cadmium-green: #13673fff;
+}
+
 li.hover-shadow:hover {
     box-shadow: 2px 3px 10px #888888;
+}
+
+body {
+    color: var(--rich-black-fogra-29)!;
+}
+
+.jumbotron, .navbar {
+    background-color: var(--honeydew)!important;
+    color: var(--rich-black-fogra-29)!important;
+}
+
+{
+    background-color: var(--honeydew)
 }
