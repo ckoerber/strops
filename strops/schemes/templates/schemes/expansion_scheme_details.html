@@ -50,14 +50,23 @@
     {{connection_graph|safe}}
   </section>
   {% if scheme.references %}
+  <hr class="my-5"/>
   <section>
-
     <h4>References</h4>
     <ul>
-      {% for reference in scheme.references.all %}
-      <li>{{reference}}</li>
-      {% endfor %}
-    </ul>
+      <div class="list-group">
+        {% for reference in scheme.references.all %}
+         <a href="{{reference.url}}" target="_blank" class="list-group-item list-group-item-action flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{reference.title}}</h5>
+            {% if reference.preprint_date %}<p><small class="text-muted">{{reference.preprint_date}}</small></p>{% endif %}
+          </div>
+          <p>{% if reference.journal %}{{reference.journal}} |{% endif %} {{reference}}</p>
+          <p>{{reference.authors}}</p>
+          {% if reference.misc %}<p>{{reference.misc}}</small></p>{% endif %}
+        </a>
+        {% endfor %}
+    </div>
   </section>
   {% endif %}
 </div>
