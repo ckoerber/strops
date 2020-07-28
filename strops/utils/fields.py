@@ -15,8 +15,8 @@ from sympy.parsing.sympy_parser import parse_expr
 
 FACTOR_VALIDATORS = [
     RegexValidator(
-        r"^[a-zA-Z0-9\*\/_\s]+$",
-        message="Please use allowed characters only (chars, numbers, * and /)",
+        r"^[a-zA-Z0-9\*\/_\s\+\-]+$",
+        message="Please use allowed characters only (chars, numbers, +, -, * and /)",
         flags=MULTILINE,
     ),
     RegexValidator(
