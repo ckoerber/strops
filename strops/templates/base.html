@@ -40,20 +40,24 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav">
           {% block nav-app-links %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'admin:index' %}">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop-data" data-toggle="dropdown">
               <i class="fa fa-database mx-1" aria-hidden="true"></i>Data
             </a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="{% url 'operators:operator-list' %}">Operators</a>
+              <a class="dropdown-item" href="{% url 'schemes:scheme-list' %}">Expansion schemes</a>
+            </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'admin:index' %}">
+            <a class="nav-link" href="{% url 'schemes:op-mapping-source-scale' %}">
               <i class="fa fa-connectdevelop mx-1" aria-hidden="true"></i>Mappings
             </a>
           </li>
           {% endblock nav-app-links %}
           {% block nav-default-links %}
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop-docs" data-toggle="dropdown">
               <i class="fa fa-book mx-1"></i>Documentation
             </a>
             <div class="dropdown-menu">

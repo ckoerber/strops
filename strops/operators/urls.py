@@ -16,5 +16,12 @@ Including another URLconf
 """
 from django.urls import path
 
+from strops.operators.views import OperatorDetailView, OperatorListView
+
+
 app_name = "operators"
-urlpatterns = []
+urlpatterns = [
+    path("", OperatorListView.as_view(), name="operator-list"),
+    path("details/<int:pk>/", OperatorDetailView.as_view(), name="operator-detail",),
+    # path("api/", include((ROUTER.urls, "resources"), namespace="api")),
+]

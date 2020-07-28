@@ -19,7 +19,7 @@ from strops.schemes import views
 
 app_name = "schemes"
 urlpatterns = [
-    path("", views.IndexView.as_view(), name="Index"),
+    path("", views.ExpansionSchemeListView.as_view(), name="scheme-list"),
     path(
         "details/<int:pk>",
         views.ExpansionSchemeDetailsView.as_view(),
