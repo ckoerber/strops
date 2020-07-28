@@ -1,7 +1,64 @@
 {% extends 'base.html' %}
+{% load operators_extras %}
+{% load strops_extras %}
+
+{% block head-extra %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/1.33.1/plotly.min.js" integrity="sha512-V0j9LhrK9IMNdFYZqh+IqU4cjo7wdxyHNyH+L0td4HryBuZ7Oq6QxP2/CWr6TituX31+gv5PnolvERuTbz8UNA==" crossorigin="anonymous"></script>
+{% endblock head-extra %}
 
 {% block content %}
 <div class="jumbotron">
-    <h1>{{scheme.name}}</h1>
+  <h1>{{scheme.name}}</h1>
+  <h5>Source scale: {{scheme.source_scale|scale_name}}</h5>
+  <h5>Target scale: {{scheme.target_scale|scale_name}}</h5>
+  <p>{{scheme.description}}</p>
+</div>
+<div class="container">
+  <section>
+    <h3>Implemented operators</h3>
+    <div class="row my-4">
+      <div class="col-md-6">
+        <h4>{{scheme.source_scale|scale_name}} scale</h4>
+        <div class="list-group">
+          {% for operator in source_operators %}
+          <a href="{{ operator.get_absolute_url }}" class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">${{operator.expression|tex}}$</h5>
+              <p>{{operator.name|title}}</p>
+            </div>
+            {% if operator.details %}<p class="mb-1">{{operator.details}}</p>{% endif %}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h4>{{scheme.target_scale|scale_name}} scale</h4>
+        <div class="list-group">
+          {% for operator in target_operators %}
+          <a href="{{ operator.get_absolute_url }}" class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">${{operator.expression|tex}}$</h5>
+              <p>{{operator.name|title}}</p>
+            </div>
+            {% if operator.details %}<p class="mb-1">{{operator.details}}</p>{% endif %}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <h4>Connections</h4>
+    {{connection_graph|safe}}
+  </section>
+  {% if scheme.references %}
+  <section>
+
+    <h4>References</h4>
+    <ul>
+      {% for reference in scheme.references.all %}
+      <li>{{reference}}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
 </div>
 {% endblock %}
