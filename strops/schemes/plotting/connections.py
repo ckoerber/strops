@@ -8,7 +8,6 @@ from plotly.graph_objects import Figure, Parcoords
 from plotly.offline import plot
 
 from strops.schemes.models import ExpansionScheme
-from strops.schemes.utils.graphs import get_connected_operators
 from strops.operators.models import Operator
 from strops.operators.templatetags.operators_extras import scale_name
 
@@ -22,12 +21,8 @@ def get_op_connections_data_plotly(
     operators.
     """
     scales = [scheme.source_scale for scheme in schemes] + [schemes[-1].target_scale]
-    sources = Operator.objects.filter(
-        id__in=schemes[0].relations.values_list("source__id", flat=True)
-    )
-    targets = Operator.objects.filter(
-        id__in=schemes[-1].relations.values_list("target__id", flat=True)
-    )
+    sources = Operator.objects.filter(source_for__scheme=schemes[0])
+    targets = Operator.objects.filter(target_of__scheme=schemes[-1])
 
     paths = set()
     for source, target in product(sources, targets):
