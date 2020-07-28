@@ -15,11 +15,7 @@ class OperatorListView(ListView):
         "name": "Name",
         "n_fields": "# Fields",
         "expression_latex": "Expression",
-        "lorentz": "Lorentz",
         "scale": "Scale",
-        "charge": "$C$",
-        "parity": "$P$",
-        "time": "$T$",
     }
 
     def get_context_data(self, **kwargs):

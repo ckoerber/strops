@@ -35,11 +35,7 @@ class OperatorSerializer(ModelSerializer):
             "name",
             "n_fields",
             "expression_string",
-            "lorentz",
             "scale",
-            "charge",
-            "parity",
-            "time",
             "details",
             "expression_latex",
         ]
