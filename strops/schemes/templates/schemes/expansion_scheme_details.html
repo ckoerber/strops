@@ -30,6 +30,7 @@
       </tbody>
     </table>
     <h4>Expansion Parameters</h4>
+    {% if scheme.expansion_parameters.first %}
     <table class="table table-hover">
       <thead>
         <tr>
@@ -48,6 +49,9 @@
         {% endfor %}
       </tbody>
     </table>
+    {% else %}
+    No expansion parameters
+    {% endif %}
   </section>
   <hr class="my-5" />
   <section>
@@ -97,7 +101,7 @@
         {% if reference.preprint_date %}<p><small class="text-muted">{{reference.preprint_date}}</small></p>{% endif %}
       </div>
       <p>{% if reference.journal %}{{reference.journal}} |{% endif %} {{reference}}</p>
-      <p>{{reference.authors}}</p>
+      <p>{{reference.authors|truncatewords:20}}</p>
       {% if reference.misc %}<p>{{reference.misc}}</small></p>{% endif %}
     </a>
     {% endfor %}
