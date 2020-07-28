@@ -44,7 +44,7 @@ INSTALLED_APPS = (
         "espressodb.management",
         "espressodb.notifications",
     ]
-    + ["bootstrap4", "widget_tweaks"]
+    + ["bootstrap4", "widget_tweaks", "rest_framework",]
     + [
         "django.contrib.admin",
         "django.contrib.auth",
@@ -167,6 +167,14 @@ LOGGING = {
     },
 }
 
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+    ]
+}
 
 PROJECT_NAME = "strops"
 

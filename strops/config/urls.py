@@ -23,6 +23,17 @@ from django.contrib.auth import views as auth_views
 from espressodb.management.utilities.settings import PROJECT_APPS
 from espressodb.management.utilities.settings import ROOT_DIR
 
+from rest_framework import routers
+
+from strops.operators.rest.router import ROUTER as OP_ROUTER
+from strops.schemes.rest.router import ROUTER as SCHEME_ROUTER
+
+
+ROUTER = routers.DefaultRouter()
+ROUTER.registry.extend(OP_ROUTER.registry)
+ROUTER.registry.extend(SCHEME_ROUTER.registry)
+
+
 urlpatterns = [
     path("", include("espressodb.base.urls", namespace="base")),
     path("admin/", admin.site.urls),
@@ -38,6 +49,8 @@ urlpatterns = [
         r"notifications/",
         include("espressodb.notifications.urls", namespace="notifications"),
     ),
+    path(r"api/", include((ROUTER.urls, "api"), namespace="api")),
+    path(r"api-auth/", include("rest_framework.urls")),
 ]
 
 for app in PROJECT_APPS:
