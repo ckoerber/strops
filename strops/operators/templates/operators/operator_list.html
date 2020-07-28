@@ -11,12 +11,12 @@
 
 {% block content %}
 <div class="jumbotron">
-  <h1>{{model.verbose_name}}</h1>
-  {% if model %}<p>{{model.get_doc}}</p>{% endif %}
+  <h1>List of all implemented operators</h1>
+  <p>Combination of quantum fields and spin matrices.</p>
 </div>
 <div class="container">
   <h5>Data</h5>
-  <table id="table" class="table table-hover table-bordered">
+  <table id="table" class="table table-hover table-bordered table-responsive" style="width:100%">
     <thead>
       <tr>
         {% for column, name in columns.items %}

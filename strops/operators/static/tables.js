@@ -1,3 +1,7 @@
+function capitalize(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 $(document).ready(function() {
     // Add footer with serach
     $('#table tfoot th').each(function() {
@@ -21,6 +25,19 @@ $(document).ready(function() {
             $('#table thead').append(r);
             $('#search_0').css('text-align', 'center');
         },
+        "columnDefs": [{
+            "render": function(data, type, row) {
+                return katex.renderToString(data, {
+                    throwOnError: false
+                });
+            },
+            "targets": 3
+        }, {
+            "render": function(data, type, row) {
+                return '<a href="details/' + row.id + '">' + capitalize(data) + '</a>';
+            },
+            "targets": 1
+        }]
     });
     // Apply the search
     table.columns().every(function() {
@@ -31,4 +48,5 @@ $(document).ready(function() {
             }
         });
     });
+
 });

@@ -11,8 +11,10 @@ class OperatorListView(ListView):
     model = Operator
     template_name = "operators/operator_list.html"
     fieldnames = {
+        "id": "Id",
         "name": "Name",
-        "latex": "Latex",
+        "n_fields": "# Fields",
+        "expression_latex": "Expression",
         "lorentz": "Lorentz",
         "scale": "Scale",
         "charge": "$C$",
@@ -23,7 +25,6 @@ class OperatorListView(ListView):
     def get_context_data(self, **kwargs):
         """Sets up api url and columns."""
         context = super().get_context_data(**kwargs)
-        context["model"] = self.model
         context["columns"] = self.fieldnames
         context["api_url"] = reverse("api:api-root") + "operators/?format=datatables"
         return context
