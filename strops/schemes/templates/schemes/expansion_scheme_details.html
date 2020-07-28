@@ -15,6 +15,10 @@
 </div>
 <div class="container">
   <section>
+    <h3>Expansion details</h3>
+  </section>
+  <hr class="my-5" />
+  <section>
     <h3>Implemented operators</h3>
     <div class="row my-4">
       <div class="col-md-6">
@@ -50,22 +54,21 @@
     {{connection_graph|safe}}
   </section>
   {% if scheme.references %}
-  <hr class="my-5"/>
+  <hr class="my-5" />
   <section>
-    <h4>References</h4>
-    <ul>
-      <div class="list-group">
-        {% for reference in scheme.references.all %}
-         <a href="{{reference.url}}" target="_blank" class="list-group-item list-group-item-action flex-column align-items-start">
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{{reference.title}}</h5>
-            {% if reference.preprint_date %}<p><small class="text-muted">{{reference.preprint_date}}</small></p>{% endif %}
-          </div>
-          <p>{% if reference.journal %}{{reference.journal}} |{% endif %} {{reference}}</p>
-          <p>{{reference.authors}}</p>
-          {% if reference.misc %}<p>{{reference.misc}}</small></p>{% endif %}
-        </a>
-        {% endfor %}
+    <h3>References</h3>
+    <div class="list-group">
+      {% for reference in scheme.references.all %}
+      <a href="{{reference.url}}" target="_blank" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1">{{reference.title}}</h5>
+          {% if reference.preprint_date %}<p><small class="text-muted">{{reference.preprint_date}}</small></p>{% endif %}
+        </div>
+        <p>{% if reference.journal %}{{reference.journal}} |{% endif %} {{reference}}</p>
+        <p>{{reference.authors}}</p>
+        {% if reference.misc %}<p>{{reference.misc}}</small></p>{% endif %}
+      </a>
+      {% endfor %}
     </div>
   </section>
   {% endif %}
