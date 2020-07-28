@@ -1,5 +1,5 @@
 function capitalize(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 $(document).ready(function() {
@@ -44,7 +44,7 @@ $(document).ready(function() {
         var that = this;
         $('input', this.footer()).on('keyup change clear', function() {
             if (that.search() !== this.value) {
-                that.search(this.value).draw();
+                that.search(this.value, $('#filter_regex').prop('checked'), $('#filter_smart').prop('checked')).draw();
             }
         });
     });
