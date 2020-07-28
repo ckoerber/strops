@@ -1,7 +1,95 @@
 {% extends 'base.html' %}
+{% load operators_extras %}
+{% load strops_extras %}
+
 
 {% block content %}
 <div class="jumbotron">
-    <h1>{{scheme.name}}</h1>
+  <h1>${{operator.expression|tex}}$</h1>
+</div>
+<div class="container">
+  <section>
+    <h3>Expansion details</h3>
+    <table class="table table-hover">
+      <tbody>
+        <tr>
+          <td>Scale</td>
+          <td>{{operator.scale|scale_name}}</td>
+        </tr>
+        <tr>
+          <td>Charge</td>
+          <td>{{operator.charge}}</td>
+        </tr>
+        <tr>
+          <td>Parity</td>
+          <td>{{operator.parity}}</td>
+        </tr>
+        <tr>
+          <td>Time</td>
+          <td>{{operator.time}}</td>
+        </tr>
+        <tr>
+          <td>Lorentz</td>
+          <td>{{operator.lorentz}}</td>
+        </tr>
+        <tr>
+          <td>Details</td>
+          <td>{{operator.details}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <hr class="my-5" />
+  <section>
+    <h3>Connected to operators</h3>
+    <div class="row">
+      {% if operator.target_of.first %}
+      <div class="col-md-6">
+        <h4>Target of</h4>
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Target</td>
+                <th scope="col">Scheme</td>
+                <th scope="col">Order</td>
+              </tr>
+            </thead>
+            <tbody>
+              {% for rel in operator.target_of.all %}
+              <tr>
+                <td><a href="{{rel.source.get_absolute_url}}">${{rel.source.expression|tex}}$</a></td>
+                <td><a href="{{rel.scheme.get_absolute_url}}">{{rel.scheme}}</a></td>
+                <td>{{rel.get_order}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+      </div>
+      {% endif %}
+      {% if operator.source_for.first %}
+      <div class="col-md-6">
+        <h4>Source for</h4>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Target</td>
+              <th scope="col">Scheme</td>
+              <th scope="col">Order</td>
+            </tr>
+          </thead>
+          <tbody>
+            {% for rel in operator.source_for.all %}
+            <tr>
+              <td><a href="{{rel.target.get_absolute_url}}">${{rel.target.expression|tex}}$</a></td>
+              <td><a href="{{rel.scheme.get_absolute_url}}">{{rel.scheme}}</a></td>
+              <td>{{rel.get_order}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+    </div>
+  </section>
 </div>
 {% endblock %}

@@ -156,6 +156,12 @@ class OperatorRelation(Base):
         if self.source.scale != self.scheme.source_scale:
             raise ValueError("Source operator not at same scale as scheme specifies.")
 
+    def get_order(self):
+        out = 1
+        for expansion in self.expansion.all():
+            out *= expansion.parameter.symbol ** expansion.power
+        return out
+
 
 class ExpansionOrder(Base):
     """Through table for relating expanion parameters to operator expansions."""
@@ -169,6 +175,7 @@ class ExpansionOrder(Base):
         OperatorRelation,
         on_delete=models.CASCADE,
         help_text="The relation between operators at different scales.",
+        related_name="expansion",
     )
     power = models.IntegerField(
         help_text="The power of the expansion paramter in given relation."

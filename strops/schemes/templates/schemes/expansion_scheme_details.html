@@ -102,7 +102,7 @@
       </div>
       <p>{% if reference.journal %}{{reference.journal}} |{% endif %} {{reference}}</p>
       <p>{{reference.authors|truncatewords:20}}</p>
-      {% if reference.misc %}<p>{{reference.misc}}</small></p>{% endif %}
+      {% if reference.misc %}<p>{{reference.misc}}</p>{% endif %}
     </a>
     {% endfor %}
   </div>
