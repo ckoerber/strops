@@ -3,7 +3,7 @@ from re import compile
 from sympy import latex as sympy_tex
 
 BAR_SUBS1 = compile(r"Bar\(([^\)]+)\)")
-BAR_SUBS2 = compile(r"\\operatorname{Bar}{\\left\(\s*([^\s\\right\)]+)\s*\\right\)}")
+BAR_SUBS2 = compile(r"\\operatorname{Bar}{\\left\(\s*(.*?)\s*\\right\)}")
 
 
 def latex(expr, wrapped=(r"\(", r"\)")):
