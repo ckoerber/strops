@@ -122,8 +122,8 @@ def get_connected_operators(
             graph.add_edge(relation.source, relation.target, key=relation)
 
     if prune:
-        source_ops = Operator.objects.filter(source_for__scheme=schemes[0])
-        target_ops = Operator.objects.filter(target_of__scheme=schemes[-1])
+        source_ops = Operator.objects.filter(source_for__scheme=schemes[0]).distinct()
+        target_ops = Operator.objects.filter(target_of__scheme=schemes[-1]).distinct()
 
         connected_to_source = set()
         for node in source_ops:
@@ -167,8 +167,8 @@ def get_all_paths(
 
         {(op1, op2, op3): [(op1, op2, {rel11}), (op2, op3, {rel21, rel22})]}
     """
-    sources = Operator.objects.filter(source_for__scheme=schemes[0])
-    targets = Operator.objects.filter(target_of__scheme=schemes[-1])
+    sources = Operator.objects.filter(source_for__scheme=schemes[0]).distinct()
+    targets = Operator.objects.filter(target_of__scheme=schemes[-1]).distinct()
 
     paths = set()
     for source, target in product(sources, targets):

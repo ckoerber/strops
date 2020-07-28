@@ -21,8 +21,8 @@ def get_op_connections_data_plotly(
     operators.
     """
     scales = [scheme.source_scale for scheme in schemes] + [schemes[-1].target_scale]
-    sources = Operator.objects.filter(source_for__scheme=schemes[0])
-    targets = Operator.objects.filter(target_of__scheme=schemes[-1])
+    sources = Operator.objects.filter(source_for__scheme=schemes[0]).distinct()
+    targets = Operator.objects.filter(target_of__scheme=schemes[-1]).distinct()
 
     paths = set()
     for source, target in product(sources, targets):
