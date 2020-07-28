@@ -30,12 +30,13 @@ class ExpansionOrderInline(StackedInline):
     extra = 1
 
 
-@register(OperatorRelation)
-class OperatorRelationAdmin(LVA):
-    inlines = (ExpansionOrderInline,)
-
-
 register_admins(
     "strops.schemes",
     exclude_models=["ExpansionScheme", "OperatorRelation", "ExpansionOrder"],
 )
+
+
+@register(OperatorRelation)
+class OperatorRelationAdmin(LVA):
+    inlines = (ExpansionOrderInline,)
+    autocomplete_fields = ("source", "target")

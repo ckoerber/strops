@@ -85,6 +85,8 @@ class SympyField(TextField):
         """Dumps expression to string."""
         if value is None:
             return value
+        elif isinstance(value, str):
+            return value
         elif isinstance(value, Expr):
             return str(value)
         else:

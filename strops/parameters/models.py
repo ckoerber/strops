@@ -36,3 +36,9 @@ class Parameter(Base):
     def __str__(self):
         """Returns own name and reference string."""
         return f"{self.name} ({self.reference})"
+
+    def get_value(self):
+        return self.value.get("mean")
+
+    def get_unit(self):
+        return self.value.get("unit")
