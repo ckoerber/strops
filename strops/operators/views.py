@@ -1,5 +1,6 @@
 """Views for the operator app."""
 from django.views.generic import ListView, DetailView
+from django.urls import reverse
 
 from strops.operators.models import Operator
 
@@ -9,6 +10,23 @@ class OperatorListView(ListView):
 
     model = Operator
     template_name = "operators/operator_list.html"
+    fieldnames = {
+        "name": "Name",
+        "latex": "Latex",
+        "lorentz": "Lorentz",
+        "scale": "Scale",
+        "charge": "$C$",
+        "parity": "$P$",
+        "time": "$T$",
+    }
+
+    def get_context_data(self, **kwargs):
+        """Sets up api url and columns."""
+        context = super().get_context_data(**kwargs)
+        context["model"] = self.model
+        context["columns"] = self.fieldnames
+        context["api_url"] = reverse("api:api-root") + "operators/?format=datatables"
+        return context
 
 
 class OperatorDetailView(DetailView):

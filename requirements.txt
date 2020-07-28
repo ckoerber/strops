@@ -9,3 +9,4 @@ networkx
 requests
 plotly
 djangorestframework
+djangorestframework-datatables

@@ -44,7 +44,7 @@ INSTALLED_APPS = (
         "espressodb.management",
         "espressodb.notifications",
     ]
-    + ["bootstrap4", "widget_tweaks", "rest_framework",]
+    + ["bootstrap4", "widget_tweaks", "rest_framework", "rest_framework_datatables"]
     + [
         "django.contrib.admin",
         "django.contrib.auth",
@@ -169,11 +169,13 @@ LOGGING = {
 
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
-    ]
+    "DEFAULT_RENDERER_CLASSES": (
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+        "rest_framework_datatables.renderers.DatatablesRenderer",
+    ),
+    "DEFAULT_PAGINATION_CLASS": "rest_framework_datatables.pagination.DatatablesPageNumberPagination",
+    "PAGE_SIZE": 50,
 }
 
 PROJECT_NAME = "strops"
