@@ -1,6 +1,7 @@
 """Table implementations related to operators."""
 from itertools import chain
 
+from django.urls import reverse
 from django.db import models
 from espressodb.base.models import Base
 
@@ -152,6 +153,9 @@ class Operator(Base):
     def latex(self):
         """Returns latex form of expression."""
         return latex(self.expression)
+
+    def get_absolute_url(self):
+        return reverse("operators:operator-detail", args=[str(self.id)])
 
 
 class TwoFieldOperator(Operator):

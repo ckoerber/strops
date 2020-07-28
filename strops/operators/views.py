@@ -8,12 +8,12 @@ class OperatorListView(ListView):
     """List view of all operators."""
 
     model = Operator
-    template_name = "operator_list_view.html"
+    template_name = "operators/operator_list.html"
 
 
 class OperatorDetailView(DetailView):
     """Detail view of operator."""
 
     model = Operator
-    template_name = "operator_detail_view.html"
+    template_name = "operators/operator_details.html"
     context_name = "operator"
