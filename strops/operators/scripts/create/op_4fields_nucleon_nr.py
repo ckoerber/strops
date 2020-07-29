@@ -8,7 +8,7 @@ SPIN_OPS = {
     "i": "1",
     "v": "v_i",
     "s": "sigma_i",
-    "sq": "sigma_i * I * delta_i",
+    "sq": "sigma_i * I * q_i",
     "vt": "epsilon_ijk * I * q_j * v_k",
     "st": "epsilon_ijk * I * sigma_j * q_k",
 }
