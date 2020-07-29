@@ -45,7 +45,7 @@
               <tr>
                 <td><a href="{{rel.source.get_absolute_url}}">${{rel.source.expression|tex}}$</a></td>
                 <td><a href="{{rel.scheme.get_absolute_url}}">{{rel.scheme}}</a></td>
-                <td>{{rel.get_order}}</td>
+                <td>${{rel.get_order|tex}}$</td>
               </tr>
               {% endfor %}
             </tbody>
