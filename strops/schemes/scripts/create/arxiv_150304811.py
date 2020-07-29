@@ -65,7 +65,7 @@ def create_expansion_parameters():
             "description": "Soft momentum scale like external scattering momentum over"
             " nucleon mass: q / m_N",
             "natural_size": 1 / 8,
-            "schem": scheme,
+            "scheme": scheme,
         }
     ]
     for p in parameters:
