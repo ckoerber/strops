@@ -4,6 +4,7 @@ from espressodb.base.models import Base
 
 from strops.utils.fields import SympyField
 from strops.references.models import Publication
+from strops.parameters.utils import format_gvar
 
 
 class Parameter(Base):
@@ -56,5 +57,10 @@ class ParameterValue(Base):
         help_text="Publication specifying the parameter.",
     )
 
-    class Meta:
+    class Meta:  # noqa
         unique_together = ["parameter", "reference"]
+
+    def __str__(self):
+        """Prints string representing parameter."""
+        value = format_gvar(self.mean, self.sdev) if self.sdev else str(self.mean)
+        return f"{value} [{self.unit}]" if self.unit else value
