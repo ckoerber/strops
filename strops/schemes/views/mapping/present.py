@@ -107,6 +107,8 @@ class PresentView(TemplateView):
         target_contributions = defaultdict(int)
         parameters = set()
         for path, steps in operator_connections.items():
+            if not path[0] in source_lagrangian:
+                continue
             factor = source_lagrangian[path[0]]
             for start, end, relations in steps:
                 tmp = 0
@@ -116,6 +118,9 @@ class PresentView(TemplateView):
                 factor *= tmp
 
             target_contributions[end] += factor
+
+        for op, factor in target_contributions.items():
+            target_contributions[op] = factor.expand().simplify()
 
         source_lagrangian = sum(
             factor * operator.expression
@@ -144,5 +149,6 @@ class PresentView(TemplateView):
                 operator_connections=operator_connections,
                 parameters=parameters,
                 missing_symbols=missing_symbols,
+                target_contributions=list(target_contributions.items()),
             )
         )
