@@ -13,8 +13,8 @@ LORENTZ_OPS = {
     "pv": "sigma_mu_nu",
     "t": "gamma_5*gamma_mu",
     "pt": "sigma_mu_nu*I*gamma_5",
-    "tv": "sigma_mu_nu * I * delta_nu",
-    "tpv": "sigma_mu_nu * I * delta_nu * I * gamma_5",
+    "tv": "sigma_mu_nu * I * q_nu",
+    "tpv": "sigma_mu_nu * I * q_nu * I * gamma_5",
 }
 
 QUARK_PAIRS = [

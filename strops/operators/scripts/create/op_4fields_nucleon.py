@@ -6,19 +6,7 @@ from strops.operators.models import Field, FourFieldOperator
 from strops.operators.scripts.create.op_4fields_quark import LORENTZ_OPS
 
 
-QUARK_PAIRS = [
-    ("s", "s"),
-    ("s", "ps"),
-    ("ps", "s"),
-    ("ps", "ps"),
-    ("v", "v"),
-    ("v", "pv"),
-    ("pv", "v"),
-    ("pv", "pv"),
-]
-
 LOGGER = getLogger("strops")
-
 
 NUCLEAR_PAIRS = [
     ("s", "s"),
@@ -66,7 +54,6 @@ def create_dm_basis_nucleons():
             tmp2["matrix3"] = LORENTZ_OPS[lk2]
             tmp2["name"] = f"{lk1}-{lk2} dm-{kind}"
             tmp2["scale"] = scale
-            tmp2["details"] = {"delta_nu": "q_nu/q"}
 
             try:
                 _, created = FourFieldOperator.objects.get_or_create(**tmp2)
