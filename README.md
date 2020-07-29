@@ -1,7 +1,21 @@
-![![Tests](https://github.com/ckoerber/strops/workflows/Tests/badge.svg?branch=master)
+[![Tests](https://github.com/ckoerber/strops/workflows/Tests/badge.svg?branch=master)
 ](https://github.com/ckoerber/strops/actions/)
 
 # Strops
+
+Data interface for connection interactions of the strong force and beyond to experiments.
+
+![Demo image](https://raw.githubusercontent.com/ckoerber/master/strops/static/img/demo.png)
+
+
+## Details
+
+
+
+## Disclaimer
+
+This project is work in progress (early alpha).
+While interest, feedback, and help in any form are appreciated, we emphasize that details may change and advise you not to base your computations on the current state, yet.
 
 ## Install
 
@@ -20,7 +34,7 @@ The fastest route is copying
 ```bash
 cp app/db-config-example.yaml app/db-config.yaml
 ```
-And change the `NAME` value to an absolute path (it does not matter where; the absolute path is important if you want to run the CLI from any folder.)
+And change the `NAME` value to an absolute path (it does not matter where; the absolute path is crucial if you want to run the CLI from any folder.)
 
 For more advanced options, see also the [EspressoDB manual](https://espressodb.readthedocs.io/en/latest/Usage.html#configure-your-project).
 
@@ -49,3 +63,15 @@ You can launch a server locally by running
 ```bash
 strops runserver
 ```
+
+## Contributing
+
+Thanks for your interest in contributing!
+There are many ways to contribute to this project.
+For now, helping by providing data is of particular interest.
+In case you want to know more, [get started here](CONTRIBUTING.md).
+
+
+## License
+
+BSD 3-Clause License. See also the [LICENSE](LICENSE.md) file.
