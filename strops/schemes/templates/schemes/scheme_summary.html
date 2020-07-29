@@ -19,7 +19,7 @@
     </p>
     {%endif%}
     <div class="row my-0">
-      <div class="col-md-2">
+      <div class="col-md-3">
         <p class="card-text my-1">
           <small class="text-muted">
             Expansion:
@@ -29,21 +29,21 @@
           </small>
         </p>
       </div>
-      <div class="col-md-2">
+      <div class="col-md-3">
         <p class="card-text">
           <small class="text-muted">
             Relations: {{scheme.relations.distinct.count}}
           </small>
         </p>
       </div>
-      <div class="col-md-2">
+      <div class="col-md-3">
         <p class="card-text">
           <small class="text-muted">
             {{scheme.source_scale|scale_name}} operators: {{scheme.related_source_operators.distinct.count }}
           </small>
         </p>
       </div>
-      <div class="col-md-2">
+      <div class="col-md-3">
         <p class="card-text">
           <small class="text-muted">
             {{scheme.target_scale|scale_name}} operators: {{scheme.related_target_operators.distinct.count }}
