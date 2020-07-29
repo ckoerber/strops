@@ -22,8 +22,8 @@ from strops.schemes.models import (
 LOGGER = getLogger("strops")
 
 
-INSPIREHEP_IDS = [1353074]
-SCHEME_NAME = "Chiral nucleon-DM expansion"
+INSPIREHEP_IDS = [1094068, 1353074]
+SCHEME_NAME = "Nucleon-DM NRET expansion"
 
 
 def get_or_create_scheme():
@@ -32,10 +32,10 @@ def get_or_create_scheme():
     if not scheme:
         data = {
             "name": SCHEME_NAME,
-            "source_scale": "quark",
-            "target_scale": "nucleon",
-            "description": "Expansion of quark gluon operators into relativistic"
-            " nucleon degrees of freedom.",
+            "source_scale": "nucleon",
+            "target_scale": "nucleon-nr",
+            "description": "Expansion non-relativistic nucleon operators into"
+            " related to relativistic nucleon degrees of freedom.",
         }
         scheme = ExpansionScheme(**data).save()
         scheme.references.add(*get_or_create_references())
@@ -62,13 +62,28 @@ def create_expansion_parameters():
     pars = ExpansionParameter.objects.filter(scheme=scheme)
     parameters = [
         {
-            "name": "momentum over nucleon mass",
+            "name": "momentum transfer over nucleon mass",
             "symbol": "epsilon_q",
-            "description": "Soft momentum scale like external scattering momentum over"
+            "description": "Momentum transfer divided by DM mass."
             " nucleon mass: q / m_N",
             "natural_size": 1 / 8,
             "scheme": scheme,
-        }
+        },
+        {
+            "name": "v perp",
+            "symbol": "epsilon_v",
+            "description": "Relative DM velocity orthogonal to momentum transfer."
+            " nucleon mass: v",
+            "natural_size": 1.0e-3,
+            "scheme": scheme,
+        },
+        {
+            "name": "nuclear mass over DM mass",
+            "symbol": "epsilon_m",
+            "description": "Nuclear mass divided by DM mass.",
+            "natural_size": 1.0e-2,
+            "scheme": scheme,
+        },
     ]
     for p in parameters:
         if not pars.filter(name=p["name"], symbol=p["symbol"]).first():
@@ -139,15 +154,14 @@ def create():
     for data in input:
         tmp1 = defaults.copy()
         tmp1.update(data)
-        for quark, nucleon in product(["up", "down"], ["proton", "neutron"]):
+        for nucleon in ["proton", "neutron"]:
             tmp2 = tmp1.copy()
 
-            if isinstance(tmp2["factor"], dict):
-                tmp2["factor"] = tmp2["factor"][quark]
-                if isinstance(tmp2["factor"], dict):
-                    tmp2["factor"] = tmp2["factor"][nucleon]
-
-            tmp2["source_op_name"] = tmp2["source_op_name"].format(quark=quark)
+            tmp2["source_op_name"] = tmp2["source_op_name"].format(nucleon=nucleon)
             tmp2["target_op_name"] = tmp2["target_op_name"].format(nucleon=nucleon)
 
-            _get_or_create_operator_relation(**tmp2)
+            try:
+                _get_or_create_operator_relation(**tmp2)
+            except Exception as error:
+                LOGGER.exception(error)
+                LOGGER.error(tmp2)

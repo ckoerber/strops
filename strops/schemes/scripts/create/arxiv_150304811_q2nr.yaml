@@ -1,0 +1,23 @@
+# scalar-scalar mappings
+- source_op_name: "s-s dm-{nucleon}"
+  target_op_name: "O_1 dm-{nucleon}"
+  order:
+    - symbol: epsilon_q
+      power: 0
+    - symbol: epsilon_v
+      power: 0
+    - symbol: epsilon_m
+      power: 0
+  factor: "1"
+  parameters: []
+- source_op_name: "s-s dm-{nucleon}"
+  target_op_name: "O_3 dm-{nucleon}"
+  order:
+    - symbol: epsilon_q
+      power: 1
+    - symbol: epsilon_v
+      power: 1
+    - symbol: epsilon_m
+      power: 0
+  factor: "-1/2/m_N"
+  parameters: []
