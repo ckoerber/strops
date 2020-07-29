@@ -9,17 +9,19 @@
 </div>
 <div class="container">
   <section>
-    <h3>Expansion details</h3>
+    <h3>Operator details</h3>
     <table class="table table-hover">
       <tbody>
         <tr>
           <td>Scale</td>
           <td>{{operator.scale|scale_name}}</td>
         </tr>
+        {% if operator.details %}
         <tr>
           <td>Details</td>
           <td>{{operator.details}}</td>
         </tr>
+        {% endif %}
       </tbody>
     </table>
   </section>
