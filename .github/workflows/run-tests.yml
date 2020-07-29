@@ -1,0 +1,44 @@
+name: Tests
+
+on:
+    push:
+        branches:
+            - master
+    pull_requests:
+        branches:
+            - master
+
+jobs:
+    test:
+        strategy:
+            max-parallel: 2
+            matrix:
+                python-version: [3.7]
+                platform: [ubuntu-latest, macos-latest]
+        runs-on: ${{ matrix.platform }}
+        steps:
+            - uses: actions/checkout@v1
+
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v1
+              with:
+                  python-version: ${{ matrix.python-version }}
+
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install -r requirements.txt
+                  pip install -r requirements-dev.txt
+
+            - name: Install package
+              run: |
+                  pip install -e .
+
+            - name: Create db-config
+              run: |
+                  echo "ENGINE: django.db.backends.sqlite3" >> app/db-config.yaml
+                  echo "NAME: app/strops-db.sqlite3" >> app/db-config.yaml
+
+            - name: Run tests
+              working-directory: ./example/my_project/
+              run: pytest
