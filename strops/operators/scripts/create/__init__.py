@@ -6,6 +6,9 @@ from strops.operators.scripts.create.op_4fields_quark import (  # noqa
 from strops.operators.scripts.create.op_4fields_nucleon import (  # noqa
     create_dm_basis_nucleons,
 )
+from strops.operators.scripts.create.op_4fields_nucleon_nr import (  # noqa
+    create_dm_basis_nucleons_nr,
+)
 
 
 def create_all():
@@ -13,6 +16,7 @@ def create_all():
     create_all_fields()
     create_dm_basis_quarks()
     create_dm_basis_nucleons()
+    create_dm_basis_nucleons_nr()
 
 
 if __name__ == "__main__":
