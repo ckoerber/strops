@@ -36,6 +36,7 @@ class ExpansionSchemeDetailsView(DetailView):
             font_size=20,
             font_family=None,
             margin=dict(l=150, r=150, t=100, b=100),
+            height=800,
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
         )

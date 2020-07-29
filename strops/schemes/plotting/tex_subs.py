@@ -4,6 +4,7 @@ from re import compile
 PATTERNS = [
     (compile(r"Bar\(([a-zA-Z]+)\)"), r"\g<1>"),
     (compile(r"Dagger\(([a-zA-Z]+)\)"), r"\g<1>"),
+    (compile(r"gamma_5"), r"𝛄₅"),
     (compile(r"gamma"), r"𝛄"),
     (compile(r"chi"), r"𝛘"),
     (compile(r"sigma"), r"𝞂"),
