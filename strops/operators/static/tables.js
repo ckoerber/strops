@@ -34,7 +34,7 @@ $(document).ready(function() {
             "targets": 3
         }, {
             "render": function(data, type, row) {
-                return '<a href="details/' + row.id + '">' + capitalize(data) + '</a>';
+                return '<a href="details/' + row.id + '">' + data + '</a>';
             },
             "targets": 1
         }]
