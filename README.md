@@ -50,6 +50,11 @@ Once done, you install tables in the DB by running
 strops migrate
 ```
 
+###### Version notes
+
+To account for changing data structures, this module makes uses of `JSONFields` which are enabled through Django's ORM with version 3.1 (currently alpha).
+If you want to use a SQLite database as a backend, make sure it has [enabled the JSON1 extension](https://docs.djangoproject.com/en/3.1/ref/models/fields/#django.db.models.JSONField).
+
 #### Inserting first trial data
 
 To inspect the data in the admin interface, you first need to create a superuser
