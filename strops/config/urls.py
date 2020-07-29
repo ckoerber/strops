@@ -25,6 +25,7 @@ from espressodb.management.utilities.settings import ROOT_DIR
 
 from rest_framework import routers
 
+from strops.config.views import AboutPhysicsView
 from strops.operators.rest.router import ROUTER as OP_ROUTER
 from strops.schemes.rest.router import ROUTER as SCHEME_ROUTER
 
@@ -49,6 +50,7 @@ urlpatterns = [
         r"notifications/",
         include("espressodb.notifications.urls", namespace="notifications"),
     ),
+    path(r"about/", AboutPhysicsView.as_view(), name="physics-about"),
     path(r"api/", include((ROUTER.urls, "api"), namespace="api")),
     path(r"api-auth/", include("rest_framework.urls")),
 ]

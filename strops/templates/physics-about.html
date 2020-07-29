@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="jumbotron">
+  <h1>About</h1>
+  <p>What is the motivation behind this project?</p>
+</div>
+<div class="container">
+  <h2>Physics Motivation</h2>
+  <p>
+    The Standard Model (SM) of particle physics is the most complete theory of fundamental particles to our knowledge and one of the most rigorously tested theories of nature.
+    While LIGO was able to directly observe the existence of gravitational waves for the first time in 2016, further confirming Einstein's theory of general relativity, there are still macroscopic observations we are not yet able to explain.
+    For example:
+  </p>
+  <ul>
+    <li>
+      Can gravity be systematically combined with the rest of the SM (the electromagnetic, weak, and strong forces)?
+    </li>
+    <li>
+      What is the nature of Dark Matter (DM), and does it interact with regular matter except through gravity?
+    </li>
+    <li>
+      Why is the universe composed of what we call matter and not antimatter?
+    </li>
+  </ul>
+  <p>
+    Answers to these macroscopic questions addressing the state of our universe can potentially be found at the microscopic level by extending the SM of particle physics.
+  </p>
+  <p>
+    Even though signatures of phenomena Beyond the Standard Model (BSM) are likely to be predominant on a high energy scal&mdash;which is directly being probed through collider experiments&mdash;the search for new physics can be complemented at a
+    low-energy
+    scale through high-precision experiments.
+    One feature common to many high-precision experiments are nuclei as the laboratories or detectors for the measurements.
+    For example, $0\nu\beta\beta$ decay experiments measure the simultaneous decay of two neutrons into two protons without emitting neutrinos by monitoring the decay of specific nuclei.
+    A non-zero decay rate would demonstrate that the lepton (e.g., electrons and neutrinos) number is violated and would support a solution to the matter-asymmetry puzzle.
+    Furthermore, DM direct detection experiments investigate nuclear recoil rates, which cannot be accounted for by any other observed particle.
+    Any unaccounted recoil would indicate the existence of a new particle that could potentially explain the gravitational effects in our galaxy and resolve the DM puzzle.
+    While there is no scientific consensus that any of these experiments have measured a non-zero signal yet, the consequences of null measurements already allow forming a better understanding of nature by evaluating the validity of proposed
+    extensions.
+  </p>
+
+  <p>
+    Relating measurements of nuclear targets to extensions of the SM presents significant theoretical challenges as nuclei are bound states of strongly interacting matter.
+    The theory underlying nuclear interactions, Quantum Chromodynamics (QCD), is formulated in terms of the fundamental particles known as quarks and gluons.
+    Establishing an effective description of nuclear interactions in terms of individual nucleons is difficult.
+    While analytic methods like Effective Field Theories (EFTs) can only indirectly establish this connection, direct methods like Lattice Quantum Chromodynamics (LQCD) need significant computational resources.
+    Once effective nuclear interactions are obtained, computationally demanding many-nucleon descriptions are used to compute experimental observables.
+    These computations are highly convoluted, and the propagation of scales introduces significant theoretical uncertainties.
+  </p>
+
+
+  <h2>Scientific Challenges</h2>
+  <p>
+    A BSM model can be represented as a set of operators.
+    To compute experimental observables, one must evaluate Nuclear Matrix Elements (NMEs) of these operators for relevant target nuclei.
+    In particular, the challenging aspects of computations can be categorized as follows:
+  </p>
+  <ul>
+    <li>
+      <b>The vast amount of BSM scenarios</b> makes it difficult to uniquely identify the source of a potential non-zero signal without a careful mapping from initial models to the experiment.
+      Each model comes with unknown BSM coefficients, such as the mass of new particles or how strongly this model couples to known particles, and many of these coefficients can potentially contribute to a single observable.
+      To account for all possible descriptions&mdash;free of model assumptions&mdash;effective approaches that encompass all allowed interactions ordered by relevance have been formulated.
+      Such effective approaches come at the cost of large parameter spaces, and several effective approaches on different scales with
+      different expansions exist in literature.
+    </li>
+    <li>
+      <b>The relevance of operators</b> to use in computations is not easily identifiable when bridging scales.
+      When going from the quark-gluon to the nucleon scale, even a finite number of new interactions generates an infinite set of new nuclear operators.
+      Thus one must order these operators by their induced relevance&mdash;depending on the unknown BSM coefficients and SM parameters.
+      Unfortunately, even the relative comparisons between operators that share BSM coefficients can be ambiguous because of inaccurately known SM parameters.
+      For example, the pion-nucleon sigma term, which governs the relevance between different nucleon-DM operators, differs as much as 50% between LQCD and dispersive computations.
+      Furthermore, a counter-term potentially required in the description of $0\nu\beta\beta$ decays of unknown size could introduce a 100% uncertainty.
+      Lattice calculations at the physical point have started to compute precise results in the one-nucleon sector, and are starting to approach the two-nucleon sector to resolve these issues.
+    </li>
+    <li>
+      <b>Large uncontrolled uncertainties</b> of theoretical many-nucleon descriptions make it hard to estimate NMEs accurately.
+      For computational reasons, many-body models like the Shell Model, Interacting Boson Model, and Quasiparticle Random-Phase Approximations have been employed to describe large target nuclei.
+      These models use approximations for multi-nucleon correlations, and different models produce results with differences as significant as 300%.
+      Due to the increase in computational resources and advances in describing nuclear interactions, it has become more feasible to employ <i>ab-initio</i> many-nucleon frameworks with accurate interactions&mdash;describing nuclear cores by
+      accounting for all involved nucleons individually&mdash;to compute relevant target nuclei.
+      Such advances were able to resolve issues like the need for $\textrm{g}_{\scriptsize\textrm{A}}\hspace{-2pt}$-quenching and systematically improved the accuracy, for example, in the description of beta decays.
+      While it is unlikely that <i>ab-initio</i> frameworks will be able to tackle experimental target nuclei as large as Xenon soon, they can provide valuable assessments of approximations made in many-body models.
+    </li>
+  </ul>
+  <p>
+    Reducing the theoretical uncertainty is crucial because experimental observables are proportional to the NME squared.
+    Hence, if one could reduce today's uncertainties of NMEs to a few percent, one would require roughly an order of magnitude less detector material while maintaining the same predictive power.
+  </p>
+
+</div>
+
+{% endblock content %}

@@ -10,7 +10,14 @@ Data interface for connection interactions of the strong force and beyond to exp
 
 ## Details
 
+Interested in the physics? [Take a look at the about page](https://strops-dev.ckoerber.com/about/).
 
+This project aims at providing an open-source module for the systematic mapping of BSM-quark-gluon interactions over BSM-nuclear interactions to experimental observables.
+The primary BSM candidate for the module is mapping DM structures&mdash;though different processes like searches for 0𝜈ββ decays are of interested as well.
+The module is intended to allow setting parameters at the SM-BSM scale to obtain all relevant operators (combined chiral and BSM parameter expansion) in the desired basis to be used in many-nucleon computations.
+Furthermore, it is intended to collect and connect existing computations to implemented operators.
+This module is expected to benefit the experimental community in translating measurements to fundamental constraints and helps the high-energy theory community provide input for many-nucleon computations.
+Systematic improvements in intermediate results, like improvements in the computation of related SM parameters, are intended to be incorporated in a database such that continuous progress will be shared.
 
 ## Disclaimer
 
