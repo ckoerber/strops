@@ -19,7 +19,9 @@ class ExpansionScheme(Base):
     order parameters.
     """
 
-    name = models.CharField(max_length=256, help_text="Name of the expansion scheme.")
+    name = models.CharField(
+        max_length=256, help_text="Name of the expansion scheme.", unique=True
+    )
     source_scale = models.CharField(
         max_length=256, choices=SCALES, help_text="The source scale of the expansion."
     )
@@ -110,11 +112,6 @@ class OperatorRelation(Base):
         related_name="target_of",
         help_text="Operator as a source for the propagation of scales.",
     )
-    factor = SympyField(
-        encoder="expression",
-        help_text="Factor associated with the propagation of scales."
-        " E.g., 'source -> factor * target' at 'order'.",
-    )
     scheme = models.ForeignKey(
         ExpansionScheme,
         on_delete=models.CASCADE,
@@ -124,9 +121,15 @@ class OperatorRelation(Base):
         " Relationships with the same tag should share the same 'order' keys"
         " to allow sorting them by relevance. ",
     )
+    factor = SympyField(
+        encoder="expression",
+        help_text="Factor associated with the propagation of scales."
+        " E.g., 'source -> factor * target' at 'order'.",
+    )
     order = models.ManyToManyField(
         ExpansionParameter,
         through="ExpansionOrder",
+        through_fields=("relation", "parameter"),
         help_text="Information allowing to order different operators"
         " by their relevance."
         " E.g., chiral power counting scheme.",
@@ -139,6 +142,9 @@ class OperatorRelation(Base):
     references = models.ManyToManyField(
         Publication, help_text="Publications specifying the operator relationship."
     )
+
+    class Meta:
+        unique_together = ["source", "target", "scheme", "factor"]
 
     def check_consistency(self):
         """Runs consistency checks on operator relation.
@@ -157,6 +163,7 @@ class OperatorRelation(Base):
             raise ValueError("Source operator not at same scale as scheme specifies.")
 
     def get_order(self):
+        """Returns collective expansion order in all coefficients."""
         out = 1
         for expansion in self.expansion.all():
             out *= expansion.parameter.symbol ** expansion.power
