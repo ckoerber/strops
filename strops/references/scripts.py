@@ -4,6 +4,7 @@ Downloads meta data from inspire records and populates the reference tables.
 """
 from typing import Dict, Any, Tuple, List
 from datetime import datetime
+from datetime import date as Date
 import requests
 from logging import getLogger
 
@@ -47,7 +48,18 @@ def parse_inspires_meta(meta: Dict[str, Any]) -> Dict[str, Any]:
         journal = None
 
     date = meta.get("preprint_date")
-    date = datetime.strptime(date, "%Y-%m-%d").date() if date else None
+    if date:
+        for date_format in ["%Y-%m-%d", "%Y-%m"]:
+            try:
+                date = datetime.strptime(date, date_format).date()
+                break
+            except ValueError:
+                pass
+        if not isinstance(date, Date):
+            raise ValueError(
+                "Could not parse date: %s for ref %s" % (date, meta["inspirehep_id"])
+            )
+
     publication_meta = {
         "arxiv_id": meta.get("arxiv_eprints", [{}])[0].get("value"),
         "inspirehep_id": meta["inspirehep_id"],
