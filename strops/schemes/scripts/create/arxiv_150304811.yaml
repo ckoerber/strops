@@ -1,0 +1,7 @@
+- source_op_name: "s-s dm-{quark}"
+  target_op_name: "s-s dm-{nucleon}"
+  order:
+    - symbol: epsilon_q
+      power: 0
+  factor: "1"
+  parameters: []
