@@ -10,9 +10,6 @@ class Parameter(Base):
     """Parameters used in computation.
 
     This class specifies numerical values to extract from parameters.
-
-    Todo:
-        Update docstrings and consistency checks.
     """
 
     name = models.CharField(
@@ -21,24 +18,43 @@ class Parameter(Base):
     symbol = SympyField(
         encoder="expression", help_text="The mathematical symbol (Sympy syntax)",
     )
-    value = models.JSONField(help_text="Value or descriptive information.")
+
+    class Meta:
+        """Implements unique constraint on name anmd reference."""
+
+        unique_together = ["name", "symbol"]
+
+    def __str__(self):
+        """Returns own name and reference string."""
+        return f"{self.symbol} ({self.name})"
+
+
+class ParameterValue(Base):
+    """Value for parameter used in computation.
+
+    Assumes uncorrelated normal distributions.
+    """
+
+    parameter = models.ForeignKey(
+        Parameter,
+        on_delete=models.CASCADE,
+        help_text="The abstract instance of the parameter.",
+        related_name="values",
+    )
+    mean = models.FloatField(null=False, help_text="Mean value of parameter.")
+    sdev = models.FloatField(
+        null=True, blank=True, help_text="Standard deviation of parameter."
+    )
+    unit = models.CharField(
+        max_length=10, null=True, blank=True, help_text="Unit of parameter.",
+    )
     reference = models.ForeignKey(
         Publication,
+        null=True,
+        blank=True,
         on_delete=models.CASCADE,
         help_text="Publication specifying the parameter.",
     )
 
     class Meta:
-        """Implements unique constraint on name anmd reference."""
-
-        unique_together = ["name", "reference"]
-
-    def __str__(self):
-        """Returns own name and reference string."""
-        return f"{self.name} ({self.reference})"
-
-    def get_value(self):
-        return self.value.get("mean")
-
-    def get_unit(self):
-        return self.value.get("unit")
+        unique_together = ["parameter", "reference"]
