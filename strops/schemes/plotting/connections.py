@@ -8,6 +8,7 @@ from plotly.graph_objects import Figure, Parcoords
 from plotly.offline import plot
 
 from strops.schemes.models import ExpansionScheme
+from strops.schemes.plotting.tex_subs import sympy_subs
 from strops.operators.models import Operator
 from strops.operators.templatetags.operators_extras import scale_name
 
@@ -38,7 +39,7 @@ def get_op_connections_data_plotly(
                 range=[0, 1],
                 label=scale_name(scale),
                 values=[coords[op] for op in [path[n_scale] for path in paths]],
-                ticktext=[str(op.expression).replace("*", "") for op in coords.keys()],
+                ticktext=[sympy_subs(op.expression) for op in coords.keys()],
                 tickvals=list(coords.values()),
             )
         )

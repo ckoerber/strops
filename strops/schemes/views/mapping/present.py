@@ -74,8 +74,9 @@ class PresentView(TemplateView):
         context["connection_graph"] = get_op_connections_graph_plotly(
             context["schemes"],
             context["connected_operators"],
-            font_size=20,
+            font_size=14,
             font_family=None,
+            height=800,
             margin=dict(l=150, r=150, t=100, b=100),
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
