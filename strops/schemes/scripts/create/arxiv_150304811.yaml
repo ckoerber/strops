@@ -1,7 +1,50 @@
+# scalar-scalar mappings
 - source_op_name: "s-s dm-{quark}"
   target_op_name: "s-s dm-{nucleon}"
   order:
     - symbol: epsilon_q
       power: 0
-  factor: "1"
+  factor:
+      up:
+        proton: "sigma_piN * (1 - xi) / 2 / m_u + Delta_fup/ m_u"
+        neutron: "sigma_piN * (1 - xi) / 2 / m_u + Delta_fun/ m_u"
+      down:
+        proton: "sigma_piN * (1 + xi) / 2 / m_d + Delta_fdp/ m_d"
+        neutron: "sigma_piN * (1 + xi) / 2 / m_d + Delta_fdn/ m_d"
+  parameters:
+    - symbol: sigma_piN
+      name: Pion nucleon sigma term
+    - symbol: xi
+      name: Relative light quark mass splitting
+
+# vector-vector mappings
+## Leading
+- source_op_name: "v-v dm-{quark}"
+  target_op_name: "v-v dm-{nucleon}"
+  order:
+    - symbol: epsilon_q
+      power: 0
+  factor:
+      up:
+        proton: "2"
+        neutron: "1"
+      down:
+        proton: "1"
+        neutron: "2"
+  parameters: []
+
+# vector-t-vector mappings
+## Leading
+- source_op_name: "v-v dm-{quark}"
+  target_op_name: "v-tv dm-{nucleon}"
+  order:
+    - symbol: epsilon_q
+      power: 1
+  factor:
+      up:
+        proton: "-I/2/m_N*kappa_N"
+        neutron: "-I/2/m_N*kappa_N"
+      down:
+        proton: "I/2/m_N*(kappa_N + kappa_Ns)"
+        neutron: "I/2/m_N*(kappa_N + kappa_Ns)"
   parameters: []

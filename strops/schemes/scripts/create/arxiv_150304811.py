@@ -1,8 +1,10 @@
 """Scripts for operator module."""
 from logging import getLogger
-from yaml import load
+from yaml import safe_load
 from os import path
 from itertools import product
+
+from sympy import sympify
 
 from strops.references.models import Publication
 from strops.references.scripts import insert_inspirehep_entry
@@ -76,7 +78,7 @@ def create_expansion_parameters():
 def get_or_create_parameters(parameters):
     out = []
     for data in parameters:
-        par, _ = Parameter.objectes.get_or_create(**data)
+        par, _ = Parameter.objects.get_or_create(**data)
         out.append(par)
     return out
 
@@ -109,7 +111,17 @@ def _get_or_create_operator_relation(
         )
 
     relation.references.add(*references)
-    relation.parameters.add(*get_or_create_parameters(parameters))
+
+    pars = get_or_create_parameters(parameters)
+    unknown_symbol = sympify(relation.factor).free_symbols - set(
+        par.symbol for par in pars
+    )
+    for symbol in unknown_symbol:
+        par, _ = Parameter.objects.get_or_create(
+            name=f"unknown: {scheme}, {symbol}", symbol=symbol
+        )
+        pars.append(par)
+    relation.parameters.add(*pars)
 
     return relation, created
 
@@ -122,17 +134,20 @@ def create():
     defaults = dict(scheme=scheme, references=references)
 
     with open(path.abspath(__file__).replace(".py", ".yaml"), "r") as inp:
-        input = load(inp.read())
+        input = safe_load(inp.read())
 
     for data in input:
         tmp1 = defaults.copy()
         tmp1.update(data)
         for quark, nucleon in product(["up", "down"], ["proton", "neutron"]):
             tmp2 = tmp1.copy()
+
+            if isinstance(tmp2["factor"], dict):
+                tmp2["factor"] = tmp2["factor"][quark]
+                if isinstance(tmp2["factor"], dict):
+                    tmp2["factor"] = tmp2["factor"][nucleon]
+
             tmp2["source_op_name"] = tmp2["source_op_name"].format(quark=quark)
             tmp2["target_op_name"] = tmp2["target_op_name"].format(nucleon=nucleon)
-
-            print("data")
-            print(tmp2)
 
             _get_or_create_operator_relation(**tmp2)
