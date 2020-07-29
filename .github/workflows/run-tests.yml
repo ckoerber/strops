@@ -40,5 +40,4 @@ jobs:
                   echo "NAME: app/strops-db.sqlite3" >> app/db-config.yaml
 
             - name: Run tests
-              working-directory: ./example/my_project/
-              run: pytest
+              run: python -m pytest
