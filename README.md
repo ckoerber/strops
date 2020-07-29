@@ -5,7 +5,7 @@
 
 Data interface for connection interactions of the strong force and beyond to experiments.
 
-![Demo image](https://raw.githubusercontent.com/ckoerber/master/strops/static/img/demo.png)
+![Demo image](https://raw.githubusercontent.com/ckoerber/strops/master/strops/static/img/demo.png)
 
 
 ## Details
