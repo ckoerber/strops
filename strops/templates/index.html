@@ -3,10 +3,23 @@
 {% block content %}
 <div class="jumbotron">
   <h1>Welcome to <b>Str</b>ong <b>Op</b>erators</h1>
-  <p class="mb-0">This is the development page of <code>strops</code></p>
-  <p class="mb-0"><a href="{% url 'physics-about' %}">What is the physics motivation?</a></p>
+  <h6 class="lead my-1">
+    Python & web data interface for connection interactions of the strong force and beyond to experiments.
+  </h6>
+  <hr class="my-4">
+  <i class="my-1">
+    This is the development page of <code>strops</code> for testing new features.
+  </i>
 </div>
 <div class="container">
+  <section>
+    <div class="alert alert-warning" role="alert">
+      <h6 class="alert-heading">This project is work in progress (early alpha)</h6>
+      <p>As such, the initial data provided is incomplete and needs review.
+        While interest, <a href="https://github.com/ckoerber/strops/issues" target="_blank">feedback</a>, and <a href="https://github.com/ckoerber/strops/blob/master/CONTRIBUTING.md" target="_blank">help in any form</a> are appreciated, we emphasize
+        that details may change and advise you not to base your computations on the current state, yet.</p>
+    </div>
+  </section>
   <section>
     <h2>What is the purpose?</h2>
     <p>
@@ -17,34 +30,46 @@
       This module is expected to benefit the experimental community in translating measurements to fundamental constraints and helps the high-energy theory community provide input for many-nucleon computations.
       Systematic improvements in intermediate results, like improvements in the computation of related SM parameters, are intended to be incorporated in a database such that continuous progress will be shared.
     </p>
-  </section>
-  <section>
-    <h2>Disclaimer&mdash;early alpha warning</h2>
-    <h4></h4>
     <p>
-      This project is work in progress (early alpha).
-      While interest, feedback, and help in any form are appreciated, we emphasize that details may change and advise you not to base your computations on the current state, yet.
+      <a href="{% url 'physics-about' %}">What is the physics motivation?</a>
     </p>
   </section>
   <section>
     <h2>What to find where?</h2>
     <ul>
       <li>
-        All implemented operators and expansion schemes can be found in the data area.
+        <a href="{% url 'operators:operator-list' %}">Implemented operators</a> and <a href="{% url 'schemes:scheme-list' %}">expansion schemes</a> can be found in the data area,
       </li>
       <li>
-        The operator mappings tab allows to connect operators at different scales.
+        The <a href="{% url 'schemes:op-mapping-source-scale' %}">operator mappings</a> tab allows to connect operators at different scales,
       </li>
       <li>
-        The documentation page describes the data structures.
+        The documentation page, for example for <a href="/documentation/schemes/">expansion schemes</a>, describes the data structures,
       </li>
       <li>
-        Once you are logged in, you have access to the admin area to mange entries.
+        Once you are <a href="{% url 'login' %}">logged in as staff</a>, you have access to the admin area to mange entries.
       </li>
     </ul>
   </section>
   <section>
-    <h2>Feedback or interested in helping?</h2>
+    <h2>Road map</h2>
+    <p>Goals in in the near future are</p>
+    <ul>
+      <li>
+        Implementation of matrix elements to connect BSM coefficients to observables,
+      </li>
+      <li>
+        Documentation of the project, especially how to use the <i>offline</i> Python API,
+      </li>
+      <li>
+        Adding unit tests and consistency checks for data inputs,
+      </li>
+      <li>
+        Providing data for direct detection DM computations.
+      </li>
+    </ul>
+    <p>See also the <a href="https://github.com/ckoerber/strops/projects" target="_blank">projects board</a>.
+    </p>
   </section>
 </div>
 {% endblock %}
