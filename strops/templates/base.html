@@ -1,6 +1,8 @@
 {% load static %}
 {% load bootstrap4 %}
 {% load base_extras %}
+{% load strops_extras %}
+
 
 <!doctype html>
 <html>
@@ -145,6 +147,10 @@
   {% block footer %}
   <div class="container-fluid">
     <ol class="breadcrumb bg-light my-1 py-0 text-muted">
+      {% get_version as strops_commit %}
+      {% if strops_commit %}
+      <li class="breadcrumb-item"><code>strops</code> commit: {{strops_commit}}</li>
+      {% endif %}
       <li class="breadcrumb-item">EspressoDB version: {% render_version %}</li>
       {% if user.is_authenticated %}
       <li class="breadcrumb-item">Database: {% render_db_info %}</li>
