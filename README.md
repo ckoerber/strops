@@ -66,7 +66,7 @@ This information is stored in the DB you have specified above.
 
 Initial data is load-in by running
 ```bash
-strops init-data
+strops initdata
 ```
 And that's it.
 
