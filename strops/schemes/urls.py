@@ -25,9 +25,9 @@ urlpatterns = [
         views.ExpansionSchemeDetailsView.as_view(),
         name="expansion_scheme_detail",
     ),
-    path(
-        "operator-mapping/", views.mapping.IndexView.as_view(), name="operator-mapping"
-    ),
+    # path(
+    #     "operator-mapping/", views.mapping.IndexView.as_view(), name="operator-mapping"
+    # ),
     path(
         "operator-mapping/from/",
         views.mapping.PickSourceScaleView.as_view(),
