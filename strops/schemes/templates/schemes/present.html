@@ -66,7 +66,7 @@
       <tbody>
         {% for op, factor in target_contributions %}
         <tr>
-          <td>${{op.expression|tex}}$</td>
+          <td><a href="{{op.get_absolute_url}}">${{op.expression|tex}}$</a></td>
           <td>${{factor|tex}}$</td>
         </tr>
         {% endfor %}
