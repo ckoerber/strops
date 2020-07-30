@@ -44,6 +44,5 @@ jobs:
 
             - name: Test data inits
               run: |
-                rm app/strops-db.sqlite3
                 strops migrate
                 strops initdata
