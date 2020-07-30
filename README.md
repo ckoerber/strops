@@ -22,6 +22,7 @@ Systematic improvements in intermediate results, like improvements in the comput
 ## Disclaimer
 
 This project is work in progress (early alpha).
+As such, the initial data provided is incomplete.
 While interest, feedback, and help in any form are appreciated, we emphasize that details may change and advise you not to base your computations on the current state, yet.
 
 ## Install
